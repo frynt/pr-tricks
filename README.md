@@ -2,6 +2,9 @@
 
 An extension for google chrome to analyse pull request
 
+![image](https://user-images.githubusercontent.com/16685940/112637090-12d50900-8e3e-11eb-8ce5-b6f10cc2d342.png)
+
+
 ## Prerequisites
 
 * [node + npm](https://nodejs.org/) (Current Version)
