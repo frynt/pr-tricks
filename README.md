@@ -1,8 +1,6 @@
-# Chrome Extension TypeScript Starter
+# PR Tricks Chrome Extension
 
-![build](https://github.com/chibat/chrome-extension-typescript-starter/workflows/build/badge.svg)
-
-Chrome Extension, TypeScript and Visual Studio Code
+An extension for google chrome to analyse pull request
 
 ## Prerequisites
 
@@ -18,10 +16,6 @@ Chrome Extension, TypeScript and Visual Studio Code
 ```
 npm install
 ```
-
-## Import as Visual Studio Code project
-
-...
 
 ## Build
 
