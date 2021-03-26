@@ -1,6 +1,6 @@
 # PR Tricks Chrome Extension
 
-An extension for google chrome to analyse pull request
+An extension for google chrome to automatically analyse pull requests
 
 ![image](https://user-images.githubusercontent.com/16685940/112637090-12d50900-8e3e-11eb-8ce5-b6f10cc2d342.png)
 
