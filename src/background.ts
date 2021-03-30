@@ -1,6 +1,4 @@
-console.log('aaaaaaaaaaaa, in service worker view tab in google chrome for developers');
 if ('serviceWorker' in navigator) {
-  console.log('bbbbbbbbbb');
   window.addEventListener('load', function () {
     navigator.serviceWorker.register('/sw.js').then(function (registration) {
       // Registration was successful

@@ -12,7 +12,7 @@ setInterval(() => {
 		if (!(element instanceof HTMLElement)) {
 			continue;
 		}
-		element.classList.add('trick-added');
+		element.classList.add(trickAddedClass);
 		let matchedTricks: MatchedTrick[] = [];
 		trickList.forEach(trick => {
 			const match = new RegExp(trick.pattern, 'gi').exec(element.innerText); 
