@@ -42,7 +42,9 @@ type `Ctrl + Shift + B`
 
 ## Load extension to chrome
 
-Load `dist` directory
+In Chrome, go to [extensions](chrome://extensions/)
+If not already the case, activate the developer mode (top right of the view)
+In the developer menu (just below the header), select "load unpacked" (charger l'extension non empaquetée) and load your local `dist` directory
 
 ## Test
 `npx jest` or `npm run test`
