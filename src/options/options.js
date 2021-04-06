@@ -1,4 +1,5 @@
-// Doc from https://developer.chrome.com/docs/extensions/mv3/options/
+
+// Default doc from https://developer.chrome.com/docs/extensions/mv3/options/
 
 // Saves options to chrome.storage
 function save_options() {

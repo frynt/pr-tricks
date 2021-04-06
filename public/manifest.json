@@ -17,5 +17,6 @@
       "matches": ["https://github.com/*"],
       "js": ["vendor.js", "content-script-github.js"]
     }
-  ]
+  ],
+  "options_page": "./options.html"
 }
