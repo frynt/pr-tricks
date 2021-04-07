@@ -1,41 +1,50 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <meta charset="utf-8" />
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="options.css">
     <title>PR Tricks Options</title>
   </head>
-
   <body>
     <h1>PR Tricks Options</h1>
     <hr />
 
-    <section>
-      <h2>Règles métiers</h2>
-    </section>
+    <section class="flex">
+      <section>
+        <h2>Règles métiers</h2>
+        <!--Configuration des analyses selon le metier. Exemple: Banque, Commerce...-->
+      </section>
 
-    <section>
-      <h2>Système de formation</h2>
-    </section>
+      <section>
+        <h2>Système de formation</h2>
+        <!--Filtre de regles d'organisation-->
+        <input type="checkbox" id="formation" name="formation" checked />
+        <label for="formation">Activer</label>
+      </section>
 
-    <section>
-      <h2>Règles d'organisation</h2>
-    </section>
+      <section>
+        <h2>Règles d'organisation</h2>
+        <!--Configuration des analyses selon les preferences du developpeur. 
+          Exemple: afficher les if, les else, autre chose-->
+      </section>
 
-    <section>
-      <h2>Favorite Color</h2>
-      <select id="color">
-        <option value="red">red</option>
-        <option value="green">green</option>
-        <option value="blue">blue</option>
-        <option value="yellow">yellow</option>
-      </select>
+      <section>
+        <h2>Favorite Color</h2>
+        <select id="color">
+          <option value="white">white</option>
+          <option value="grey">grey</option>
+          <option value="blue">blue</option>
+        </select>
+      </section>
     </section>
     <hr />
 
-    <section>
+    <div class="submit">
       <button id="save">Save</button>
       <p id="status"></p>
-    </section>
+    </div>
 
     <script src="./options.js"></script>
   </body>
