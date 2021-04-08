@@ -3,7 +3,6 @@ import { uniqBy } from 'lodash';
 import { trickList } from './data/trick-list';
 import { MatchedTrick } from './entities/matchedTrick';
 
-
 const trickAddedClass = 'trick-added';
 
 setInterval(() => {
