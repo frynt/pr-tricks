@@ -10,7 +10,22 @@
     "style": "prettier --write \"src/**/*.{ts,tsx}\""
   },
   "author": "",
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-conventional-changelog"
+    },
+    "validate-commit-msg": {
+      "types": "conventional-commit-types",
+      "helpMessage": "Use \"yarn commit\" instead, we use conventional-changelog format :) (https://github.com/commitizen/cz-cli)"
+    }
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
   "dependencies": {
+    "cz-conventional-changelog": "^3.3.0",
     "jquery": "^3.6.0",
     "lodash": "^4.17.21",
     "moment": "~2.24.0",
@@ -19,6 +34,8 @@
     "vue-property-decorator": "^9.1.2"
   },
   "devDependencies": {
+    "@commitlint/cli": "^12.1.1",
+    "@commitlint/config-conventional": "^12.1.1",
     "@types/chrome": "0.0.100",
     "@types/jest": "^25.1.4",
     "@types/jquery": "^3.5.5",
@@ -29,6 +46,7 @@
     "copy-webpack-plugin": "^6.4.1",
     "deepmerge": "^4.2.2",
     "glob": "^7.1.6",
+    "husky": "^6.0.0",
     "jest": "^26.6.3",
     "prettier": "^2.2.1",
     "rimraf": "^3.0.2 ",
