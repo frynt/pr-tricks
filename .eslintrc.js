@@ -5,9 +5,6 @@ module.exports = {
     ],
     "plugins": ["@needone"],
     "rules": {
-        "@needone/api-property-enum-name-required": "error",
-        "@needone/api-operation-required": "error",
-        "@needone/dto-naming": "error",
         "@needone/entity-naming": "error"
     }
 }
