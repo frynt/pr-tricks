@@ -3,8 +3,5 @@ module.exports = {
     "extends": [
         "./node_modules/@needone/eslint-plugin/api/.eslintrc.js",
     ],
-    "plugins": ["@needone"],
-    "rules": {
-        "@needone/entity-naming": "error"
-    }
+    "plugins": ["@needone"]
 }
