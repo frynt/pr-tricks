@@ -1,3 +1,4 @@
-self.addEventListener('install', function(event) {
+self.addEventListener('install', () => {
+    // eslint-disable-next-line no-alert
     alert('install');
-}); 
+});
