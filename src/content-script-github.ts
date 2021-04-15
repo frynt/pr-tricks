@@ -32,7 +32,7 @@ setInterval(() => {
                 if (trickCaptured.length > 0) {
                     trickCaptured = ` ${trickCaptured}`;
                 }
-                htmlTricks += `<span title="${trick.name}" style="color:${trick.color}">${trick.emoji}${trickCaptured}</span>`;
+                htmlTricks += `<span title="${trick.details}" style="color:${trick.color}">${trick.emoji}${trickCaptured}</span>`;
                 if (index + 1 < matchTricksUnique.length) {
                     htmlTricks += ' - ';
                 }

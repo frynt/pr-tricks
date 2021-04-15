@@ -57,7 +57,7 @@ export function restoreOptions(): void {
         (document.getElementById('color') as HTMLInputElement).value = items.favoriteColor;
         document.body.style.backgroundColor = (document.getElementById('color') as HTMLInputElement).value;
         (document.getElementById('formation') as HTMLInputElement).checked = items.formationActivated;
-        (document.getElementById('details') as HTMLInputElement).checked = items.detailsCheck;
+        (document.getElementById('details') as HTMLInputElement).checked = items.formationDetails;
 
         function setPreferences(element): void {
             if (items.formationPreferences.includes(element)) {
