@@ -2,25 +2,39 @@ import { trickList } from './data/trick-list';
 
 // Doc from https://developer.chrome.com/docs/extensions/mv3/options/
 // Saves options to chrome.storage
-let tab: string[] = [];
+let categories: string[] = [];
+
+// Show categories section if the formation mode is activated
+export function showFormationMode(): void {
+    const section = (document.getElementById('categories') as HTMLInputElement);
+    const activated = (document.getElementById('formation') as HTMLInputElement);
+
+    if (activated.checked) {
+        section.style.visibility = 'visible';
+    } else {
+        section.style.visibility = 'hidden';
+    }
+}
 
 export function saveOptions(): void {
     const color = (document.getElementById('color') as HTMLInputElement).value;
-    const formation = (document.getElementById('formation') as HTMLInputElement).checked;
-    const categories = [];
+    const formationCheck = (document.getElementById('formation') as HTMLInputElement).checked;
+    const detailsCheck = (document.getElementById('details') as HTMLInputElement).checked;
+    const tab = [];
 
     function saveCategories(element): void {
         const checkbox = (document.getElementById(element) as HTMLInputElement);
         if (checkbox.checked) {
-            categories.push(element);
+            tab.push(element);
         }
     }
-    tab.forEach((element) => saveCategories(element));
+    categories.forEach((element) => saveCategories(element));
 
     chrome.storage.sync.set({
         favoriteColor: color,
-        formationActivated: formation,
-        formationPreferences: JSON.stringify(categories),
+        formationActivated: formationCheck,
+        formationPreferences: JSON.stringify(tab),
+        formationDetails: detailsCheck,
     }, () => {
         // Update status to let user know options were saved.
         const status = document.getElementById('status');
@@ -38,10 +52,12 @@ export function restoreOptions(): void {
         favoriteColor: '',
         formationActivated: '',
         formationPreferences: [],
+        formationDetails: '',
     }, (items) => {
         (document.getElementById('color') as HTMLInputElement).value = items.favoriteColor;
         document.body.style.backgroundColor = (document.getElementById('color') as HTMLInputElement).value;
         (document.getElementById('formation') as HTMLInputElement).checked = items.formationActivated;
+        (document.getElementById('details') as HTMLInputElement).checked = items.detailsCheck;
 
         function setPreferences(element): void {
             if (items.formationPreferences.includes(element)) {
@@ -49,23 +65,38 @@ export function restoreOptions(): void {
             } else {
                 (document.getElementById(element) as HTMLInputElement).checked = false;
             }
+            showFormationMode();
         }
-        tab.forEach((element) => setPreferences(element));
+        categories.forEach((element) => setPreferences(element));
     });
 }
 
 // Get each unique categories from trickList array
 export function getCategories(): string[] {
-    const categories = [];
+    const tab = [];
 
-    function filter(element): void {
-        if (!categories.includes(element.name)) {
-            categories.push(element.name);
+    function getNames(element): void {
+        if (!tab.includes(element.name)) {
+            tab.push(element.name);
         }
     }
-    trickList.forEach((element) => filter(element));
+    trickList.forEach((element) => getNames(element));
 
-    return categories;
+    return tab;
+}
+
+// Get each descriptions for each trick's name
+export function getDescriptions(): string[] {
+    const tab = [];
+
+    function getDetails(element): void {
+        if (!tab.includes(element.tab)) {
+            tab.push(element.tab);
+        }
+    }
+    trickList.forEach((element) => getDetails(element));
+
+    return tab;
 }
 
 // Display label and checkbox foreach categories
@@ -82,29 +113,16 @@ export function displayCategories(): void {
         section.appendChild(input);
         section.appendChild(document.createElement('br'));
     }
-    tab.forEach((element) => displayElements(element));
-}
-
-// Show categories section if the formation mode is activated
-export function showFormationMode(): void {
-    const section = (document.getElementById('categories') as HTMLInputElement);
-    const activated = (document.getElementById('formation') as HTMLInputElement);
-
-    if (activated.checked) {
-        section.style.visibility = 'visible';
-    } else {
-        section.style.visibility = 'hidden';
-    }
+    categories.forEach((element) => displayElements(element));
 }
 
 // Loaded at page start
 export function init(): void {
     restoreOptions();
     displayCategories();
-    showFormationMode();
 }
 
-tab = getCategories();
+categories = getCategories();
 document.addEventListener('DOMContentLoaded', init);
 document.getElementById('save').addEventListener('click', saveOptions);
 document.getElementById('formation').addEventListener('change', showFormationMode);
