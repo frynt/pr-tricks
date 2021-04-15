@@ -1,113 +1,110 @@
-// Doc from https://developer.chrome.com/docs/extensions/mv3/options/
-import { sync } from 'glob';
-import { castArray } from 'lodash';
-import { createDecorator } from 'vue-class-component';
 import { trickList } from './data/trick-list';
 
 // Doc from https://developer.chrome.com/docs/extensions/mv3/options/
-let tab = get_categories();
-
 // Saves options to chrome.storage
-export function saveOptions() {
-	let color = (document.getElementById('color') as HTMLInputElement).value;
-	let formation = (document.getElementById('formation') as HTMLInputElement).checked;
-	let categories = [];
+let tab: string[] = [];
 
-	tab.forEach(element => save_categories(element));
-	function save_categories(element) {
-		let checkbox = (document.getElementById(element) as HTMLInputElement);
-		if (checkbox.checked) {
-			categories.push(element);
-		}
-	}
-	chrome.storage.sync.set({
-		favoriteColor: color,
-		formationActivated: formation,
-		formationPreferences: JSON.stringify(categories)
-	}, function () {
-		// Update status to let user know options were saved.
-		let status = document.getElementById('status');
-		status.textContent = 'Options saved.';
-		setTimeout(function () {
-			status.textContent = '';
-		}, 2000);
-	});
+export function saveOptions(): void {
+    const color = (document.getElementById('color') as HTMLInputElement).value;
+    const formation = (document.getElementById('formation') as HTMLInputElement).checked;
+    const categories = [];
+
+    function saveCategories(element): void {
+        const checkbox = (document.getElementById(element) as HTMLInputElement);
+        if (checkbox.checked) {
+            categories.push(element);
+        }
+    }
+    tab.forEach((element) => saveCategories(element));
+
+    chrome.storage.sync.set({
+        favoriteColor: color,
+        formationActivated: formation,
+        formationPreferences: JSON.stringify(categories),
+    }, () => {
+        // Update status to let user know options were saved.
+        const status = document.getElementById('status');
+        status.textContent = 'Options saved.';
+        setTimeout(() => {
+            status.textContent = '';
+        }, 2000);
+    });
 }
 
 // Restores select box and checkbox state using the preferences
 // stored in chrome.storage.
-export function restoreOptions() {
-	chrome.storage.sync.get({
-		favoriteColor: '',
-		formationActivated: '',
-		formationPreferences: []
-	}, function (items) {
-		(document.getElementById('color') as HTMLInputElement).value = items.favoriteColor;
-		document.body.style.backgroundColor = (document.getElementById('color') as HTMLInputElement).value;
-		(document.getElementById('formation') as HTMLInputElement).checked = items.formationActivated;
-		showFormationMode();
+export function restoreOptions(): void {
+    chrome.storage.sync.get({
+        favoriteColor: '',
+        formationActivated: '',
+        formationPreferences: [],
+    }, (items) => {
+        (document.getElementById('color') as HTMLInputElement).value = items.favoriteColor;
+        document.body.style.backgroundColor = (document.getElementById('color') as HTMLInputElement).value;
+        (document.getElementById('formation') as HTMLInputElement).checked = items.formationActivated;
 
-		tab.forEach(element => set_preferences(element));
-		function set_preferences(element) {
-			if (items.formationPreferences.includes(element)) {
-				(document.getElementById(element) as HTMLInputElement).checked = true;
-			}
-			else {
-				(document.getElementById(element) as HTMLInputElement).checked = false;
-			}
-		}
-	});
+        function setPreferences(element): void {
+            if (items.formationPreferences.includes(element)) {
+                (document.getElementById(element) as HTMLInputElement).checked = true;
+            } else {
+                (document.getElementById(element) as HTMLInputElement).checked = false;
+            }
+        }
+        tab.forEach((element) => setPreferences(element));
+    });
 }
-
-//Loaded at page start
-export function init() {
-	restoreOptions();
-	display_categories();
-}
-
-document.addEventListener('DOMContentLoaded', init);
-document.getElementById('save').addEventListener('click', saveOptions);
-document.getElementById('formation').addEventListener('change',showFormationMode);
 
 // Get each unique categories from trickList array
-export function get_categories() {
-	let categories = [];
-	trickList.forEach(element => filter(element));
+export function getCategories(): string[] {
+    const categories = [];
 
-	function filter(element) {
-		if (!categories.includes(element.name)) {
-			categories.push(element.name);
-		}
-	}
-	return categories;
+    function filter(element): void {
+        if (!categories.includes(element.name)) {
+            categories.push(element.name);
+        }
+    }
+    trickList.forEach((element) => filter(element));
+
+    return categories;
 }
 
 // Display label and checkbox foreach categories
-export function display_categories() {
-	let section = (document.getElementById('categories') as HTMLInputElement);
-	tab.forEach(element => display_elements(element));
+export function displayCategories(): void {
+    const section = (document.getElementById('categories') as HTMLInputElement);
 
-	function display_elements(element) {
-		let label = document.createElement('label');
-		let input = document.createElement('input');
-		label.innerHTML = element;
-		input.setAttribute("type", "checkbox");
-		input.id = element;
-		section.appendChild(label);
-		section.appendChild(input);
-		section.appendChild(document.createElement('br'));
-	}
+    function displayElements(element): void {
+        const label = document.createElement('label');
+        const input = document.createElement('input');
+        label.innerHTML = element;
+        input.setAttribute('type', 'checkbox');
+        input.id = element;
+        section.appendChild(label);
+        section.appendChild(input);
+        section.appendChild(document.createElement('br'));
+    }
+    tab.forEach((element) => displayElements(element));
 }
 
 // Show categories section if the formation mode is activated
-export function showFormationMode() {
-	let section = (document.getElementById('categories') as HTMLInputElement);
-	let activated = (document.getElementById('formation') as HTMLInputElement);
+export function showFormationMode(): void {
+    const section = (document.getElementById('categories') as HTMLInputElement);
+    const activated = (document.getElementById('formation') as HTMLInputElement);
 
-	if (activated.checked) {
-		section.style.visibility = 'visible';
-	}
-	else {
-		section.style.visibility = 'hidden';
-	}
+    if (activated.checked) {
+        section.style.visibility = 'visible';
+    } else {
+        section.style.visibility = 'hidden';
+    }
 }
+
+// Loaded at page start
+export function init(): void {
+    restoreOptions();
+    displayCategories();
+    showFormationMode();
+}
+
+tab = getCategories();
+document.addEventListener('DOMContentLoaded', init);
+document.getElementById('save').addEventListener('click', saveOptions);
+document.getElementById('formation').addEventListener('change', showFormationMode);

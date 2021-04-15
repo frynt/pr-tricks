@@ -9,7 +9,7 @@
     "test": "npx jest",
     "style": "prettier --write \"src/**/*.{ts,tsx}\"",
     "lint": "node ./node_modules/eslint/bin/eslint.js \"src/**/*.ts\" --quiet",
-    "lint-fix": "yarn lint -- --fix"
+    "lint-fix": "npm run lint -- --fix"
   },
   "author": "",
   "config": {
