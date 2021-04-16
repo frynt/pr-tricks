@@ -18,18 +18,17 @@ setInterval(() => {
         // Filter for formationMode from options
         const formationTrickList: Trick[] = [];
         chrome.storage.sync.get({
-            favoriteColor: '',
             formationActivated: '',
             formationPreferences: [],
             formationDetails: '',
         }, (items) => {
             // userPreferences = items.formationPreferences;
-            trickList.forEach(element => userPreferences(element));
-            function userPreferences(element): void {
-                if (items.formationPreferences.includes(element.name)) {
-                    formationTrickList.push(element);
+            function userPreferences(trick): void {
+                if (items.formationPreferences.includes(trick.name)) {
+                    formationTrickList.push(trick);
                 }
             }
+            trickList.forEach(trick => userPreferences(trick));
         });
 
         console.log(formationTrickList);

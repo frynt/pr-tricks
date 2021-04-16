@@ -1,8 +1,9 @@
 import { trickList } from './data/trick-list';
-import { trickPreferences } from './data/trick-preferences';
 
 // Doc from https://developer.chrome.com/docs/extensions/mv3/options/
+
 let categories: string[] = [];
+const trickPreferences = [];
 
 // Show categories section if the formation mode is activated
 export function showFormationMode(): void {
