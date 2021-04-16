@@ -1,6 +1,7 @@
 import { uniqBy } from 'lodash';
 import { trickList } from './data/trick-list';
 import { MatchedTrick } from './entities/matchedTrick';
+import { Trick } from './entities/trick';
 
 const trickAddedClass = 'trick-added';
 
@@ -13,7 +14,27 @@ setInterval(() => {
         }
         element.classList.add(trickAddedClass);
         const matchedTricks: MatchedTrick[] = [];
-        trickList.forEach((trick) => {
+
+        // Filter for formationMode from options
+        const formationTrickList: Trick[] = [];
+        chrome.storage.sync.get({
+            favoriteColor: '',
+            formationActivated: '',
+            formationPreferences: [],
+            formationDetails: '',
+        }, (items) => {
+            // userPreferences = items.formationPreferences;
+            trickList.forEach(element => userPreferences(element));
+            function userPreferences(element): void {
+                if (items.formationPreferences.includes(element.name)) {
+                    formationTrickList.push(element);
+                }
+            }
+        });
+
+        console.log(formationTrickList);
+
+        formationTrickList.forEach((trick) => {
             const match = new RegExp(trick.pattern, 'gi').exec(element.innerText);
             if (match) {
                 const captured = match.slice(1, match.length);

@@ -1,7 +1,7 @@
 import { trickList } from './data/trick-list';
+import { trickPreferences } from './data/trick-preferences';
 
 // Doc from https://developer.chrome.com/docs/extensions/mv3/options/
-// Saves options to chrome.storage
 let categories: string[] = [];
 
 // Show categories section if the formation mode is activated
@@ -16,16 +16,16 @@ export function showFormationMode(): void {
     }
 }
 
+// Saves options to chrome.storage
 export function saveOptions(): void {
     const color = (document.getElementById('color') as HTMLInputElement).value;
     const formationCheck = (document.getElementById('formation') as HTMLInputElement).checked;
     const detailsCheck = (document.getElementById('details') as HTMLInputElement).checked;
-    const tab = [];
 
     function saveCategories(element): void {
         const checkbox = (document.getElementById(element) as HTMLInputElement);
         if (checkbox.checked) {
-            tab.push(element);
+            trickPreferences.push(element);
         }
     }
     categories.forEach((element) => saveCategories(element));
@@ -33,7 +33,7 @@ export function saveOptions(): void {
     chrome.storage.sync.set({
         favoriteColor: color,
         formationActivated: formationCheck,
-        formationPreferences: JSON.stringify(tab),
+        formationPreferences: JSON.stringify(trickPreferences),
         formationDetails: detailsCheck,
     }, () => {
         // Update status to let user know options were saved.
@@ -90,8 +90,8 @@ export function getDescriptions(): string[] {
     const tab = [];
 
     function getDetails(element): void {
-        if (!tab.includes(element.tab)) {
-            tab.push(element.tab);
+        if (!tab.includes(element.details)) {
+            tab.push(element.details);
         }
     }
     trickList.forEach((element) => getDetails(element));
@@ -120,9 +120,9 @@ export function displayCategories(): void {
 export function init(): void {
     restoreOptions();
     displayCategories();
+    document.getElementById('save').addEventListener('click', saveOptions);
 }
 
 categories = getCategories();
 document.addEventListener('DOMContentLoaded', init);
-document.getElementById('save').addEventListener('click', saveOptions);
 document.getElementById('formation').addEventListener('change', showFormationMode);
