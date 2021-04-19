@@ -28,9 +28,7 @@ setInterval(async () => {
                     if (items.formationPreferences.includes(trick.name)) {
                         formationTrickList.push(trick);
                     }
-                }
-
-                else {
+                } else {
                     formationTrickList.push(trick);
                 }
             }
