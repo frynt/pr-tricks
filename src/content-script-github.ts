@@ -24,11 +24,17 @@ setInterval(async () => {
         }, (items) => {
             // userPreferences = items.formationPreferences;
             function userPreferences(trick): void {
-                if (items.formationPreferences.includes(trick.name)) {
+                if (items.formationActivated) {
+                    if (items.formationPreferences.includes(trick.name)) {
+                        formationTrickList.push(trick);
+                    }
+                }
+
+                else {
                     formationTrickList.push(trick);
                 }
             }
-            // trickList.forEach((trick) => userPreferences(trick));
+
             for (const trick of trickList) {
                 userPreferences(trick);
             }
@@ -54,7 +60,11 @@ setInterval(async () => {
                     if (trickCaptured.length > 0) {
                         trickCaptured = ` ${trickCaptured}`;
                     }
-                    htmlTricks += `<span title="${trick.details}" style="color:${trick.color}">${trick.emoji}${trickCaptured}</span>`;
+                    let trickDetails = '';
+                    if (items.formationDetails) {
+                        trickDetails = trick.details;
+                    }
+                    htmlTricks += `<span title="${trickDetails}" style="color:${trick.color}">${trick.emoji}${trickCaptured}</span>`;
                     if (index + 1 < matchTricksUnique.length) {
                         htmlTricks += ' - ';
                     }
