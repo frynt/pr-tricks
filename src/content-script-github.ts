@@ -22,8 +22,7 @@ setInterval(async () => {
             formationPreferences: [],
             formationDetails: '',
         }, (items) => {
-            // userPreferences = items.formationPreferences;
-            function userPreferences(trick): void {
+            trickList.map((trick) => {
                 if (items.formationActivated) {
                     if (items.formationPreferences.includes(trick.name)) {
                         formationTrickList.push(trick);
@@ -31,11 +30,7 @@ setInterval(async () => {
                 } else {
                     formationTrickList.push(trick);
                 }
-            }
-
-            for (const trick of trickList) {
-                userPreferences(trick);
-            }
+            });
 
             // formationTrickList n'est pas bien lu par le systeme de match de tricks par rapport a trickList qui fonctionne bien
             formationTrickList.forEach((trick) => {

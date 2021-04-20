@@ -23,13 +23,12 @@ export function saveOptions(): void {
     const formationCheck = (document.getElementById('formation') as HTMLInputElement).checked;
     const detailsCheck = (document.getElementById('details') as HTMLInputElement).checked;
 
-    function saveCategories(element): void {
+    categories.map((element) => {
         const checkbox = (document.getElementById(element) as HTMLInputElement);
         if (checkbox.checked) {
             trickPreferences.push(element);
         }
-    }
-    categories.forEach((element) => saveCategories(element));
+    });
 
     chrome.storage.sync.set({
         favoriteColor: color,
@@ -60,42 +59,36 @@ export function restoreOptions(): void {
         (document.getElementById('formation') as HTMLInputElement).checked = items.formationActivated;
         (document.getElementById('details') as HTMLInputElement).checked = items.formationDetails;
 
-        function setPreferences(element): void {
+        categories.map((element) => {
             if (items.formationPreferences.includes(element)) {
                 (document.getElementById(element) as HTMLInputElement).checked = true;
             } else {
                 (document.getElementById(element) as HTMLInputElement).checked = false;
             }
             showFormationMode();
-        }
-        categories.forEach((element) => setPreferences(element));
+        });
     });
 }
 
 // Get each unique categories from trickList array
 export function getCategories(): string[] {
     const tab = [];
-
-    function getNames(element): void {
+    trickList.map((element) => {
         if (!tab.includes(element.name)) {
             tab.push(element.name);
         }
-    }
-    trickList.forEach((element) => getNames(element));
-
+    });
     return tab;
 }
 
 // Get each descriptions for each trick's name
 export function getDescriptions(): string[] {
     const tab = [];
-
-    function getDetails(element): void {
+    trickList.map((element) => {
         if (!tab.includes(element.details)) {
             tab.push(element.details);
         }
-    }
-    trickList.forEach((element) => getDetails(element));
+    });
 
     return tab;
 }
@@ -103,8 +96,7 @@ export function getDescriptions(): string[] {
 // Display label and checkbox foreach categories
 export function displayCategories(): void {
     const section = (document.getElementById('categories') as HTMLInputElement);
-
-    function displayElements(element): void {
+    categories.map((element) => {
         const label = document.createElement('label');
         const input = document.createElement('input');
         label.innerHTML = element;
@@ -113,8 +105,7 @@ export function displayCategories(): void {
         section.appendChild(label);
         section.appendChild(input);
         section.appendChild(document.createElement('br'));
-    }
-    categories.forEach((element) => displayElements(element));
+    });
 }
 
 // Loaded at page start
