@@ -3,4 +3,5 @@ export class Trick {
     color: string;
     name: string;
     emoji: string;
+    details: string;
 }

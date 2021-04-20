@@ -20,8 +20,11 @@
       <section>
         <h2>Système de formation</h2>
         <!--Filtre de regles d'organisation-->
-        <input type="checkbox" id="formation" name="formation" checked />
-        <label for="formation">Activer</label>
+        <input type="checkbox" id="formation" name="formation" />
+        <label for="formation">Mode formation</label>
+        <br>
+        <input type="checkbox" id="details" name="details" />
+        <label for="details">Afficher les détails</label>
       </section>
 
       <section>
@@ -41,10 +44,14 @@
     </section>
     <hr />
 
-    <div class="submit">
-      <button id="save" onclick="saveOptions()">Save</button>
+    <div id="submit">
+      <button id="save">Save</button>
       <p id="status"></p>
     </div>
+
+    <section id="categories">
+      <h2>Catégories</h2>
+    </section>
 
     <script src="./options.js"></script>
   </body>

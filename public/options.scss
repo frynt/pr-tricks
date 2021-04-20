@@ -21,7 +21,7 @@ section {
 }
 
 input {
-	width: 20%;
+	display: inline-block;
 }
 
 label {
@@ -41,6 +41,10 @@ button {
 	font-size: medium;
 }
 
-.submit {
+#submit {
 	text-align: center;
+}
+
+#categories {
+	visibility: hidden;
 }
