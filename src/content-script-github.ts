@@ -18,6 +18,7 @@ setInterval(async () => {
         // Filter for formationMode from options
         const formationTrickList: Trick[] = [];
         chrome.storage.sync.get({
+            favoriteColor: '',
             formationActivated: '',
             formationPreferences: [],
             formationDetails: '',
@@ -62,7 +63,8 @@ setInterval(async () => {
                         htmlTricks += ' - ';
                     }
                 });
-                element.insertAdjacentHTML('beforeend', `<div style="display: inline-block;border-radius: 6px;font-size:15px; border: 1px solid black;background-color:#0366d6;padding: 1px 1px 1px 1px; vertical-align: middle;">${htmlTricks}</div>`);
+                const backColor = items.favoriteColor;
+                element.insertAdjacentHTML('beforeend', `<div style="display: inline-block;border-radius: 6px;font-size:15px; border: 1px solid black;background-color:${backColor};padding: 1px 1px 1px 1px; vertical-align: middle;">${htmlTricks}</div>`);
             }
         });
     }
