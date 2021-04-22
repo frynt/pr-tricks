@@ -17,6 +17,31 @@ export function showFormationMode(): void {
     }
 }
 
+// Restores select box and checkbox state using the preferences
+// stored in chrome.storage.
+export function restoreOptions(): void {
+    chrome.storage.sync.get({
+        favoriteColor: '',
+        formationActivated: '',
+        formationPreferences: [],
+        formationDetails: '',
+    }, (items) => {
+        (document.getElementById('color') as HTMLInputElement).value = items.favoriteColor;
+        document.body.style.backgroundColor = (document.getElementById('color') as HTMLInputElement).value;
+        (document.getElementById('formation') as HTMLInputElement).checked = items.formationActivated;
+        (document.getElementById('details') as HTMLInputElement).checked = items.formationDetails;
+
+        categories.map((element) => {
+            if (items.formationPreferences.includes(element)) {
+                (document.getElementById(element) as HTMLInputElement).checked = true;
+            } else {
+                (document.getElementById(element) as HTMLInputElement).checked = false;
+            }
+            showFormationMode();
+        });
+    });
+}
+
 // Saves options to chrome.storage
 export function saveOptions(): void {
     const color = (document.getElementById('color') as HTMLInputElement).value;
@@ -43,31 +68,7 @@ export function saveOptions(): void {
             status.textContent = '';
         }, 2000);
     });
-}
-
-// Restores select box and checkbox state using the preferences
-// stored in chrome.storage.
-export function restoreOptions(): void {
-    chrome.storage.sync.get({
-        favoriteColor: '',
-        formationActivated: '',
-        formationPreferences: [],
-        formationDetails: '',
-    }, (items) => {
-        (document.getElementById('color') as HTMLInputElement).value = items.favoriteColor;
-        document.body.style.backgroundColor = (document.getElementById('color') as HTMLInputElement).value;
-        (document.getElementById('formation') as HTMLInputElement).checked = items.formationActivated;
-        (document.getElementById('details') as HTMLInputElement).checked = items.formationDetails;
-
-        categories.map((element) => {
-            if (items.formationPreferences.includes(element)) {
-                (document.getElementById(element) as HTMLInputElement).checked = true;
-            } else {
-                (document.getElementById(element) as HTMLInputElement).checked = false;
-            }
-            showFormationMode();
-        });
-    });
+    restoreOptions();
 }
 
 // Get each unique categories from trickList array

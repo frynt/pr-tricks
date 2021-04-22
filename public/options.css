@@ -1,44 +1,22 @@
 body {
-  margin: 5% 15% 5% 15%;
+  margin-right: 50%;
+  width: max-content;
+  height: min-content;
 }
 
 h1 {
   text-align: center;
 }
 
-section {
-  background-color: lightgray;
-  margin: 0;
-  padding: 4%;
-}
-
-.flex {
-  display: flex;
-  flex-direction: row;
-  margin: 0;
-  padding: 0;
-  justify-content: center;
-}
-
-input {
-  display: inline-block;
-}
-
 label {
-  font-size: medium;
-}
-
-select {
-  margin: 0;
-  padding: 2% 10% 2% 10%;
   font-size: medium;
 }
 
 button {
   margin: 0;
-  padding: 1% 2% 1% 2%;
+  padding: 2% 3% 2% 3%;
   text-align: center;
-  font-size: medium;
+  font-size: large;
 }
 
 #submit {

@@ -18,5 +18,7 @@
       "js": ["vendor.js", "content-script-github.js"]
     }
   ],
-  "options_page": "./options.html"
-}
+  "action": {
+      "default_popup": "./options.html"
+    }
+  }
