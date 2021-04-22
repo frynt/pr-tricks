@@ -33,7 +33,6 @@ setInterval(async () => {
                 }
             });
 
-            // formationTrickList n'est pas bien lu par le systeme de match de tricks par rapport a trickList qui fonctionne bien
             formationTrickList.forEach((trick) => {
                 const match = new RegExp(trick.pattern, 'gi').exec(element.innerText);
                 if (match) {
