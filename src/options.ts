@@ -1,4 +1,5 @@
 import { trickList } from './data/trick-list';
+import axios, { AxiosResponse } from 'axios';
 
 // Doc from https://developer.chrome.com/docs/extensions/mv3/options/
 
@@ -109,11 +110,22 @@ export function displayCategories(): void {
     });
 }
 
+export const url = async (): Promise<void> => {
+};
+
 // Loaded at page start
-export function init(): void {
+export async function init(): Promise<void> {
     restoreOptions();
     displayCategories();
     document.getElementById('save').addEventListener('click', saveOptions);
+    try {
+        const json = await axios.get('https://mocki.io/v1/93500d5e-fb82-4980-b8c1-dee098b15a0e');
+        console.log('toto');
+        console.log(json);
+    }
+    catch (error) {
+        console.log(error);
+    }
 }
 
 categories = getCategories();
