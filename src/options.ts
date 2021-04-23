@@ -82,6 +82,24 @@ export function getCategories(): string[] {
     return tab;
 }
 
+// Call external api to get custom json list
+export const getListFromHttp = async (): Promise<any> => {
+    const xhr = new XMLHttpRequest();
+    try {
+        xhr.onreadystatechange = (): void => {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                console.log(xhr.response);
+            }
+        };
+        xhr.open('GET', 'https://mocki.io/v1/f2cc018a-2692-4c00-9314-a947d38ae3ee', true);
+        xhr.responseType = 'json';
+        xhr.send();
+    } catch (error) {
+        console.log(error);
+    }
+    return xhr.response;
+};
+
 // Get each descriptions for each trick's name
 export function getDescriptions(): string[] {
     const tab = [];
@@ -90,7 +108,6 @@ export function getDescriptions(): string[] {
             tab.push(element.details);
         }
     });
-
     return tab;
 }
 
@@ -109,31 +126,12 @@ export function displayCategories(): void {
     });
 }
 
-// call external api to get custom json
-export const url = async (): Promise<void> => {
-    try {
-        const xhr = new XMLHttpRequest();
-
-        xhr.open('GET', 'http://localhost:3000/auth/test');
-        xhr.responseType = 'json';
-        xhr.send();
-        xhr.onload = (): void => {
-            const responseObj = xhr.response;
-            console.log(responseObj);
-        };
-    } catch (error) {
-        console.log(error);
-    }
-};
-
 // Loaded at page start
 export async function init(): Promise<void> {
     restoreOptions();
     displayCategories();
     document.getElementById('save').addEventListener('click', saveOptions);
 }
-
-url();
 
 categories = getCategories();
 document.addEventListener('DOMContentLoaded', init);

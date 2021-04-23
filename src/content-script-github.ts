@@ -15,6 +15,9 @@ setInterval(async () => {
         element.classList.add(trickAddedClass);
         const matchedTricks: MatchedTrick[] = [];
 
+        // const response = await getListFromHttp();
+        // console.log(response);
+
         // Filter for formationMode from options
         const formationTrickList: Trick[] = [];
         chrome.storage.sync.get({
