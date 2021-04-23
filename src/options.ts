@@ -1,5 +1,4 @@
 import { trickList } from './data/trick-list';
-import axios, { AxiosResponse } from 'axios';
 
 // Doc from https://developer.chrome.com/docs/extensions/mv3/options/
 
@@ -111,6 +110,19 @@ export function displayCategories(): void {
 }
 
 export const url = async (): Promise<void> => {
+    try {
+        const xhr = new XMLHttpRequest();
+
+        xhr.open('GET', 'http://localhost:3000/auth/test');
+        xhr.responseType = 'json';
+        xhr.send();
+        xhr.onload = (): void => {
+            const responseObj = xhr.response;
+            console.log(responseObj);
+        };
+    } catch (error) {
+        console.log(error);
+    }
 };
 
 // Loaded at page start
@@ -118,15 +130,9 @@ export async function init(): Promise<void> {
     restoreOptions();
     displayCategories();
     document.getElementById('save').addEventListener('click', saveOptions);
-    try {
-        const json = await axios.get('https://mocki.io/v1/93500d5e-fb82-4980-b8c1-dee098b15a0e');
-        console.log('toto');
-        console.log(json);
-    }
-    catch (error) {
-        console.log(error);
-    }
 }
+
+url();
 
 categories = getCategories();
 document.addEventListener('DOMContentLoaded', init);
