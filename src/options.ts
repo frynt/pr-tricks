@@ -109,6 +109,7 @@ export function displayCategories(): void {
     });
 }
 
+// call external api to get custom json
 export const url = async (): Promise<void> => {
     try {
         const xhr = new XMLHttpRequest();
