@@ -1,9 +1,12 @@
 import { trickList } from './data/trick-list';
+import { getListFromHttp } from './utils/request.utils';
 
 // Doc from https://developer.chrome.com/docs/extensions/mv3/options/
 
 let categories: string[] = [];
 const trickPreferences = [];
+const api = 'https://mocki.io/v1/f2cc018a-2692-4c00-9314-a947d38ae3ee';
+let extTricks = [];
 
 // Show categories section if the formation mode is activated
 export function showFormationMode(): void {
@@ -108,6 +111,17 @@ export function displayCategories(): void {
     });
 }
 
+export function getHtppTricks(): string[] {
+    const tab = [];
+    getListFromHttp(api).then((res) => {
+        tab.push(res);
+    })
+        .catch((err) => {
+            console.log('error', err);
+        });
+    return tab;
+}
+
 // Loaded at page start
 export function init(): void {
     restoreOptions();
@@ -116,5 +130,6 @@ export function init(): void {
 }
 
 categories = getCategories();
+extTricks = getHtppTricks();
 document.addEventListener('DOMContentLoaded', init);
 document.getElementById('formation').addEventListener('change', showFormationMode);
