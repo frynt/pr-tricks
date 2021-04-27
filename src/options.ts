@@ -16,7 +16,18 @@ export function showFormationMode(): void {
     if (activated.checked) {
         section.style.visibility = 'visible';
     } else {
-        section.style.visibility = 'hidden';
+        section.style.visibility = 'collapse';
+    }
+}
+
+export function showAddListSection(): void {
+    const section = (document.getElementById('trickList') as HTMLInputElement);
+    const activated = (document.getElementById('addList') as HTMLInputElement);
+
+    if (activated.checked) {
+        section.style.visibility = 'visible';
+    } else {
+        section.style.visibility = 'collapse';
     }
 }
 
@@ -28,11 +39,13 @@ export function restoreOptions(): void {
         formationActivated: '',
         formationPreferences: [],
         formationDetails: '',
+        addListlActivated: '',
     }, (items) => {
         (document.getElementById('color') as HTMLInputElement).value = items.favoriteColor;
         document.body.style.backgroundColor = (document.getElementById('color') as HTMLInputElement).value;
         (document.getElementById('formation') as HTMLInputElement).checked = items.formationActivated;
         (document.getElementById('details') as HTMLInputElement).checked = items.formationDetails;
+        (document.getElementById('addList') as HTMLInputElement).checked = items.addListlActivated;
 
         categories.map((element) => {
             if (items.formationPreferences.includes(element)) {
@@ -41,6 +54,7 @@ export function restoreOptions(): void {
                 (document.getElementById(element) as HTMLInputElement).checked = false;
             }
             showFormationMode();
+            showAddListSection();
         });
     });
 }
@@ -50,6 +64,7 @@ export function saveOptions(): void {
     const color = (document.getElementById('color') as HTMLInputElement).value;
     const formationCheck = (document.getElementById('formation') as HTMLInputElement).checked;
     const detailsCheck = (document.getElementById('details') as HTMLInputElement).checked;
+    const addList = (document.getElementById('addList') as HTMLInputElement).checked;
 
     categories.map((element) => {
         const checkbox = (document.getElementById(element) as HTMLInputElement);
@@ -63,6 +78,7 @@ export function saveOptions(): void {
         formationActivated: formationCheck,
         formationPreferences: JSON.stringify(trickPreferences),
         formationDetails: detailsCheck,
+        addListlActivated: addList,
     }, () => {
         // Update status to let user know options were saved.
         const status = document.getElementById('status');
@@ -122,6 +138,15 @@ export function getHtppTricks(): string[] {
     return tab;
 }
 
+export function fusionTricks(): void {
+    const tab = [];
+    extTricks.map((element) => {
+        if (!categories.includes(element.name)) {
+            categories.push(element.name);
+        }
+    });
+}
+
 // Loaded at page start
 export function init(): void {
     restoreOptions();
@@ -133,3 +158,4 @@ categories = getCategories();
 extTricks = getHtppTricks();
 document.addEventListener('DOMContentLoaded', init);
 document.getElementById('formation').addEventListener('change', showFormationMode);
+document.getElementById('addList').addEventListener('change', showAddListSection);

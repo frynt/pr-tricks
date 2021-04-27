@@ -1,59 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="options.css">
     <title>PR Tricks Options</title>
-  </head>
-  <body>
+</head>
+
+<body>
     <h1>PR Tricks Options</h1>
     <hr />
 
     <section>
-      <section>
-        <h2>Règles métiers</h2>
-        <!--Configuration des analyses selon le metier. Exemple: Banque, Commerce...-->
-      </section>
-      <hr />
+        <section>
+            <h2>Règles métiers</h2>
+            <!--Configuration des analyses selon le metier. Exemple: Banque, Commerce...-->
+            <input type="checkbox" id="addList" name="addList" />
+            <label for="addList">Ajouter une trickList</label>
+        </section>
+        <section id="trickList">
+            <h2>Ajouter une trickList</h2>
+            <label for="url">Tapez une URL : </label>
+            <input type="text" id="url" name="url">
+            <br>
+            <label for="">OU</label>
+            <br>
+            <label for="local">Ajoutez une liste : </label>
+            <input type="file" id="local" name="local">
+        </section>
+        <hr />
 
-      <section>
-        <h2>Système de formation</h2>
-        <!--Filtre de regles d'organisation-->
-        <input type="checkbox" id="formation" name="formation" />
-        <label for="formation">Mode formation</label>
-        <br>
-        <input type="checkbox" id="details" name="details" />
-        <label for="details">Afficher les détails</label>
-      </section>
-      <hr />
-      
-      <section>
-        <h2>Couleur du thème</h2>
-        <label for="color">Thème: </label>
-        <input type="color" id="color">
-        </select>
-      </section>
-      <hr />
+        <section>
+            <h2>Système de formation</h2>
+            <!--Filtre de regles d'organisation-->
+            <input type="checkbox" id="formation" name="formation" />
+            <label for="formation">Mode formation</label>
+            <br>
+            <input type="checkbox" id="details" name="details" />
+            <label for="details">Afficher les détails</label>
+        </section>
+        <section id="categories">
+            <h2>Catégories</h2>
+        </section>
+        <hr />
 
-      <section>
-        <h2>Règles d'organisation</h2>
-        <!--Configuration des analyses selon les preferences du developpeur. 
+        <section>
+            <h2>Couleur du thème</h2>
+            <label for="color">Thème: </label>
+            <input type="color" id="color">
+            </select>
+        </section>
+        <hr />
+
+        <section>
+            <h2>Règles d'organisation</h2>
+            <!--Configuration des analyses selon les preferences du developpeur. 
           Exemple: afficher les if, les else, autre chose-->
-      </section>
+        </section>
     </section>
     <hr />
 
     <div id="submit">
-      <button id="save">Save</button>
-      <p id="status"></p>
+        <button id="save">Save</button>
+        <p id="status"></p>
     </div>
 
-    <section id="categories">
-      <h2>Catégories</h2>
-    </section>
-
     <script src="./options.js"></script>
-  </body>
+</body>
+
 </html>
