@@ -5,7 +5,11 @@ import { Trick } from './interfaces/trick.interface';
 
 const trickAddedClass = 'trick-added';
 
-setInterval(async () => {
+export class GithubReviewScripts {
+    constructor() {}
+}
+
+window.addEventListener('scroll', async () => {
     const elements = document.querySelectorAll(`td.blob-code.blob-code-addition .blob-code-inner.blob-code-marker:not(.${trickAddedClass})`);
     for await (const element of elements) {
         if (!(element instanceof HTMLElement)) {
@@ -68,4 +72,4 @@ setInterval(async () => {
             }
         });
     }
-}, 500);
+});
