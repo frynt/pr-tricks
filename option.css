@@ -5,7 +5,7 @@ body {
 }
 
 h1 {
-  text-align: left;
+  text-align: center;
 }
 
 label {
@@ -24,16 +24,11 @@ button {
 }
 
 #categories {
-  display: none;
-}
-
-#trickList {
-  display: none;
-}
-
-#space {
-  margin: 200%;
   visibility: collapse;
 }
 
-/*# sourceMappingURL=options.css.map */
+#trickList {
+  visibility: collapse;
+}
+
+/*# sourceMappingURL=option.css.map */

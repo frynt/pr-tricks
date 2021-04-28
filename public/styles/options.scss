@@ -5,7 +5,7 @@ body {
 }
 
 h1 {
-    text-align: center;
+    text-align: left;
 }
 
 label {
@@ -24,5 +24,9 @@ button {
 }
 
 #categories {
-	visibility: hidden;
+	display: none;
+}
+
+#trickList {
+    display: none;
 }
