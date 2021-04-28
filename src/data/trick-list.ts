@@ -7,7 +7,7 @@ const migrationColor = 'white';
 const typeColor = 'white';
 const technicalWarning = 'white';
 
-export const trickList: Trick[] = [{
+export const TrickList: Trick[] = [{
     pattern: 'if.*\\(',
     color: logicalColor,
     name: 'logic',

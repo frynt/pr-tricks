@@ -1,5 +1,5 @@
 import { uniqBy } from 'lodash';
-import { trickList } from './data/trick-list';
+import { TrickList } from './data/trick-list';
 import { MatchedTrick } from './entities/matchedTrick';
 import { Trick } from './entities/trick';
 
@@ -23,7 +23,7 @@ setInterval(async () => {
             formationPreferences: [],
             formationDetails: '',
         }, (items) => {
-            trickList.map((trick) => {
+            TrickList.map((trick) => {
                 if (items.formationActivated) {
                     if (items.formationPreferences.includes(trick.name)) {
                         formationTrickList.push(trick);
