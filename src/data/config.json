@@ -1,0 +1,16 @@
+[
+    {
+        "pattern": "chrome",
+        "color": "yellow",
+        "name": "api",
+        "emoji": "🔧",
+        "details": "Method used by chrome api"
+    },
+    {
+        "pattern": "document",
+        "color": "blue",
+        "name": "dom",
+        "emoji": "📚",
+        "details": "Method used to get/create/delete html elements in JS" 
+    }
+]
