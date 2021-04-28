@@ -14,11 +14,17 @@
   ],
   "content_scripts": [
     {
-      "matches": ["https://github.com/*"],
-      "js": ["vendor.js", "content-script-github.js"]
+      "matches": [
+        "https://github.com/*"
+      ],
+      "js": [
+        "vendor.js",
+        "github-review-script.js"
+      ]
     }
   ],
   "action": {
-      "default_popup": "./options.html"
-    }
-  }
+    "default_popup": "./views/options.html"
+  },
+  "options_page": "./views/options.html"
+}

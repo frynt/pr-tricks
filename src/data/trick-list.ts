@@ -1,4 +1,4 @@
-import { Trick } from '../entities/trick';
+import { Trick } from '../interfaces/trick.interface';
 
 const logicalColor = 'white';
 const typoColor = 'white';
@@ -7,7 +7,7 @@ const migrationColor = 'white';
 const typeColor = 'white';
 const technicalWarning = 'white';
 
-export const trickList: Trick[] = [{
+export const TrickList: Trick[] = [{
     pattern: 'if.*\\(',
     color: logicalColor,
     name: 'logic',

@@ -1,4 +1,16 @@
 {
     "typescript.tsdk": "./node_modules/typescript/lib",
     "files.eol": "\n",
+    "editor.codeActionsOnSave": {
+        "source.fixAll": true,
+        "source.organizeImports": true
+    },
+    "html.format.enable": true,
+    "html.format.wrapAttributes": "force-expand-multiline",
+    "[html]": {
+        "editor.defaultFormatter": "vscode.html-language-features"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features"
+    },
 }

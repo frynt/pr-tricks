@@ -1,4 +1,4 @@
-export class Trick {
+export interface Trick {
     pattern: string;
     color: string;
     name: string;
