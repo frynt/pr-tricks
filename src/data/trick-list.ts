@@ -1,4 +1,4 @@
-import { Trick } from '../entities/trick';
+import { Trick } from '../interfaces/trick.interface';
 
 const logicalColor = 'white';
 const typoColor = 'white';

@@ -1,5 +1,5 @@
 import { TrickList } from './data/trick-list';
-import { Trick } from './entities/trick';
+import { Trick } from './interfaces/trick.interface';
 
 // Doc from https://developer.chrome.com/docs/extensions/mv3/options/
 
