@@ -1,7 +1,7 @@
 import { uniqBy } from 'lodash';
 import { TrickList } from './data/trick-list';
-import { MatchedTrick } from './entities/matchedTrick';
-import { Trick } from './entities/trick';
+import { MatchedTrick } from './interfaces/matched-trick.interface';
+import { Trick } from './interfaces/trick.interface';
 
 const trickAddedClass = 'trick-added';
 
