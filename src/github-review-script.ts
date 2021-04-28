@@ -33,9 +33,8 @@ export class GithubReviewScripts {
         element: HTMLElement,
     ): void {
         const matchedTricks: MatchedTrick[] = [];
-
-        // Filter for formationMode from options
         const formationTrickList: Trick[] = [];
+
         chrome.storage.sync.get({
             favoriteColor: '',
             formationActivated: '',
@@ -52,7 +51,6 @@ export class GithubReviewScripts {
                 }
             });
 
-            // formationTrickList n'est pas bien lu par le systeme de match de tricks par rapport a trickList qui fonctionne bien
             formationTrickList.forEach((trick) => {
                 const match = new RegExp(trick.pattern, 'gi').exec(element.innerText);
                 if (match) {
@@ -65,29 +63,42 @@ export class GithubReviewScripts {
                 }
             });
 
-            if (matchedTricks.length > 0) {
-                const matchTricksUnique = uniqBy(matchedTricks, 'name');
-                let htmlTricks = '';
-                matchTricksUnique.forEach((trick, index) => {
-                    let trickCaptured = trick.captured.join('');
-                    if (trickCaptured.length > 0) {
-                        trickCaptured = ` ${trickCaptured}`;
-                    }
-                    let trickDetails = '';
-                    if (items.formationDetails) {
-                        trickDetails = trick.details;
-                    }
-                    htmlTricks += `<span title="${trickDetails}" style="color:${trick.color}">${trick.emoji}${trickCaptured}</span>`;
-                    if (index + 1 < matchTricksUnique.length) {
-                        htmlTricks += ' - ';
-                    }
-                });
-                const backColor = items.favoriteColor;
-                element.insertAdjacentHTML('beforeend', `<div style="display: inline-block;border-radius: 6px;font-size:15px; border: 1px solid black;background-color:${backColor};padding: 1px 1px 1px 1px; vertical-align: middle;">${htmlTricks}</div>`);
-            }
+            this._setTricksHighlight(matchedTricks, items, element);
         });
     }
-});
+
+    /**
+     * @description Set HTML design foreach matchedTricks
+     */
+    private _setTricksHighlight(
+        matchedTricks: MatchedTrick[],
+        items: Record<string, any>,
+        element: HTMLElement,
+    ): void {
+        if (matchedTricks.length > 0) {
+            const matchTricksUnique = uniqBy(matchedTricks, 'name');
+            let htmlTricks = '';
+
+            matchTricksUnique.forEach((trick, index) => {
+                let trickCaptured = trick.captured.join('');
+                if (trickCaptured.length > 0) {
+                    trickCaptured = ` ${trickCaptured}`;
+                }
+
+                let trickDetails = '';
+                if (items.formationDetails) {
+                    trickDetails = trick.details;
+                }
+
+                htmlTricks += `<span title="${trickDetails}" style="color:${trick.color}">${trick.emoji}${trickCaptured}</span>`;
+                if (index + 1 < matchTricksUnique.length) {
+                    htmlTricks += ' - ';
+                }
+            });
+
+            const backColor = items.favoriteColor;
+            element.insertAdjacentHTML('beforeend', `<div style="display: inline-block;border-radius: 6px;font-size:15px; border: 1px solid black;background-color:${backColor};padding: 1px 1px 1px 1px; vertical-align: middle;">${htmlTricks}</div>`);
+        }
     }
 }
 
