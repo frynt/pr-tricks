@@ -5,7 +5,7 @@ import { getListFromHttp } from './utils/request.utils';
 
 let categories: string[] = [];
 const trickPreferences = [];
-const api = 'https://mocki.io/v1/f2cc018a-2692-4c00-9314-a947d38ae3ee';
+// const api = 'https://mocki.io/v1/f2cc018a-2692-4c00-9314-a947d38ae3ee';
 let extTricks = [];
 
 // Show categories section if the formation mode is activated
@@ -14,9 +14,9 @@ export function showFormationMode(): void {
     const activated = (document.getElementById('formation') as HTMLInputElement);
 
     if (activated.checked) {
-        section.style.visibility = 'visible';
+        section.style.display = 'block';
     } else {
-        section.style.visibility = 'collapse';
+        section.style.display = 'none';
     }
 }
 
@@ -25,9 +25,9 @@ export function showAddListSection(): void {
     const activated = (document.getElementById('addList') as HTMLInputElement);
 
     if (activated.checked) {
-        section.style.visibility = 'visible';
+        section.style.display = 'block';
     } else {
-        section.style.visibility = 'collapse';
+        section.style.display = 'none';
     }
 }
 
@@ -127,19 +127,7 @@ export function displayCategories(): void {
     });
 }
 
-export function getHtppTricks(): string[] {
-    const tab = [];
-    getListFromHttp(api).then((res) => {
-        tab.push(res);
-    })
-        .catch((err) => {
-            console.log('error', err);
-        });
-    return tab;
-}
-
 export function fusionTricks(): void {
-    const tab = [];
     extTricks.map((element) => {
         if (!categories.includes(element.name)) {
             categories.push(element.name);
@@ -147,15 +135,33 @@ export function fusionTricks(): void {
     });
 }
 
+export function addHtppTricks(): string[] {
+    const tab = [];
+    const url = (document.getElementById('url') as HTMLInputElement).value;
+
+    if (url === null) {
+        console.log('url is empty');
+    } else {
+        getListFromHttp(url).then((res) => {
+            tab.push(res);
+        })
+            .catch((err) => {
+                console.log('error', err);
+            });
+    }
+    return tab;
+}
+
 // Loaded at page start
 export function init(): void {
     restoreOptions();
     displayCategories();
     document.getElementById('save').addEventListener('click', saveOptions);
+    document.getElementById('subList').addEventListener('click', addHtppTricks);
 }
 
 categories = getCategories();
-extTricks = getHtppTricks();
+extTricks = addHtppTricks();
 document.addEventListener('DOMContentLoaded', init);
 document.getElementById('formation').addEventListener('change', showFormationMode);
 document.getElementById('addList').addEventListener('change', showAddListSection);
