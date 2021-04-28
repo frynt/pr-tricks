@@ -7,7 +7,14 @@ const trickAddedClass = 'trick-added';
 
 export class GithubReviewScripts {
     constructor() {
+        this._initTrickOnWindowsLoad();
         this._listenScrollEvent();
+    }
+
+    private _initTrickOnWindowsLoad(): void {
+        window.addEventListener('load', async () => {
+            await this._loopOverDOMElements();
+        });
     }
 
     /**
@@ -15,20 +22,30 @@ export class GithubReviewScripts {
      */
     private _listenScrollEvent(): void {
         window.addEventListener('scroll', async () => {
-            const elements = document.querySelectorAll(`td.blob-code.blob-code-addition .blob-code-inner.blob-code-marker:not(.${trickAddedClass})`);
-
-            for await (const element of elements) {
-                if (!(element instanceof HTMLElement)) {
-                    // eslint-disable-next-line no-continue
-                    continue;
-                }
-                element.classList.add(trickAddedClass);
-
-                this._setTrickListInDOM(element);
-            }
+            await this._loopOverDOMElements();
         });
     }
 
+    /**
+     * @description loop over DOM elements, add the class on the elements and ended by set TrickList
+     */
+    private async _loopOverDOMElements(): Promise<void> {
+        const elements = document.querySelectorAll(`td.blob-code.blob-code-addition .blob-code-inner.blob-code-marker:not(.${trickAddedClass})`);
+
+        for await (const element of elements) {
+            if (!(element instanceof HTMLElement)) {
+                // eslint-disable-next-line no-continue
+                continue;
+            }
+            element.classList.add(trickAddedClass);
+
+            this._setTrickListInDOM(element);
+        }
+    }
+
+    /**
+     * @description Get chrome API infos, set formation preferences and math witch trick patern on git's page
+     */
     private _setTrickListInDOM(
         element: HTMLElement,
     ): void {
