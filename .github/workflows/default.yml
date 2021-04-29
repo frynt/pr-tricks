@@ -1,0 +1,29 @@
+name: Build, Quality, Test
+
+on: push
+
+jobs:
+  default:
+    container:
+      image: node:12-alpine
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Cache modules
+        uses: actions/cache@v1
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm ruin build
