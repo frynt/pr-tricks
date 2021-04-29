@@ -1,5 +1,7 @@
+import { Trick } from '../interfaces/trick.interface';
+
 // Call external api to get custom json list
-export const getListFromHttp = (url): Promise<Record<string, any>[]> => new Promise((resolve, reject) => {
+export const getListFromHttp = (url): Promise<Trick[]> => new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
 
     xhr.onreadystatechange = (): void => {

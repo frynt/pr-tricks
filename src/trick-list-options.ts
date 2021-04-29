@@ -12,12 +12,9 @@ import { getListFromHttp } from './utils/request.utils';
 export class TrickListOptions {
     private static _categories: string[] = [];
     private static _trickPreferences: string[] = [];
-    private static _extTricks: Record<string, any>[] = [];
+    private static _extTricks: Trick[] = [];
 
     constructor() {
-        TrickListOptions._categories = TrickListOptions._getCategories();
-        TrickListOptions._extTricks = TrickListOptions._addHtppTricks();
-
         document.addEventListener('DOMContentLoaded', () => TrickListOptions._init());
         document.getElementById('formation').addEventListener('change', () => TrickListOptions._showFormationMode());
     }
@@ -25,24 +22,21 @@ export class TrickListOptions {
     /**
      * @description Get each unique categories from trickList array
      */
-    private static _getCategories(): string[] {
-        const tab: string[] = [];
-
+    private static _getCategories(): void {
         TrickList.map((element: Trick) => {
-            if (!tab.includes(element.name)) {
-                tab.push(element.name);
+            if (!TrickListOptions._categories.includes(element.name)) {
+                TrickListOptions._categories.push(element.name);
             }
         });
-
-        return tab;
     }
 
     /**
      * @description Loaded at page start
      */
     private static _init(): void {
-        TrickListOptions._restoreOptions();
+        TrickListOptions._getCategories();
         TrickListOptions._displayCategories();
+        TrickListOptions._restoreOptions();
         document.getElementById('save').addEventListener('click', TrickListOptions._saveOptions);
         document.getElementById('subList').addEventListener('click', TrickListOptions._addHtppTricks);
     }
@@ -113,17 +107,20 @@ export class TrickListOptions {
      */
     private static _displayCategories(): void {
         const section = (document.getElementById('categories') as HTMLInputElement);
+        while (section.firstChild) {
+            section.removeChild(section.firstChild);
+        }
 
         TrickListOptions._categories.map((element: string) => {
-            const label = document.createElement('label');
             const input = document.createElement('input');
+            const label = document.createElement('label');
 
             label.innerHTML = element;
             input.setAttribute('type', 'checkbox');
             input.id = element;
 
-            section.appendChild(label);
             section.appendChild(input);
+            section.appendChild(label);
             section.appendChild(document.createElement('br'));
         });
     }
@@ -142,31 +139,44 @@ export class TrickListOptions {
         }
     }
 
-    private static _fusionTricks(): void {
-        TrickListOptions._extTricks.map((element) => {
-            if (!TrickListOptions._categories.includes(element.name)) {
-                TrickListOptions._categories.push(element.name);
-            }
-        });
+    /**
+     * @description Get new trickList from XMLHtppRequest (see request.utils)
+     */
+    private static async _addHtppTricks(): Promise<void> {
+        const url = (document.getElementById('url') as HTMLInputElement).value;
+        (document.getElementById('url') as HTMLInputElement).value = '';
+
+        TrickListOptions._extTricks = await getListFromHttp(url);
+        TrickListOptions._fusionTricks();
+
+        const section = (document.getElementById('activeLists') as HTMLInputElement);
+        const li = document.createElement('li');
+        li.innerHTML = url;
+        section.appendChild(li);
     }
 
-    private static _addHtppTricks(): Record<string, any>[] {
-        const tab = [];
-        const url = (document.getElementById('url') as HTMLInputElement).value;
-
-        if (url === null) {
-            console.log('url is empty');
+    /**
+     * @description Mix/Add new Tricks from url api
+     */
+    private static _fusionTricks(): void {
+        if (TrickListOptions._extTricks === null) {
+            // eslint-disable-next-line no-alert
+            alert('_fusionTricks error: _extTricks is null');
         } else {
-            getListFromHttp(url).then((res: Record<string, any>) => {
-                tab.push(res);
-            })
-                .catch((err) => {
-                    console.log('error', err);
-                });
+            TrickListOptions._extTricks.map((element) => {
+                if (!TrickList.includes(element)) {
+                    TrickList.push(element);
+                }
+            });
+
+            TrickList.map((elem) => {
+                if (!TrickListOptions._categories.includes(elem.name)) {
+                    TrickListOptions._categories.push(elem.name);
+                }
+            });
+            TrickListOptions._init();
         }
-        return tab;
     }
 }
-
 // eslint-disable-next-line no-new
 new TrickListOptions();
