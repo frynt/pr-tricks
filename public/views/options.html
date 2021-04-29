@@ -3,18 +3,9 @@
 
 <head>
     <meta charset="UTF-8" />
-    <meta
-        http-equiv="X-UA-Compatible"
-        content="IE=edge"
-    />
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    />
-    <link
-        rel="stylesheet"
-        href="../styles/options.css"
-    >
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../style/options.css">
     <title>PR Tricks Options</title>
 </head>
 
@@ -22,7 +13,7 @@
     <h1>PR Tricks Options</h1>
     <hr />
 
-    <section class="flex">
+    <section>
         <section>
             <h2>Règles métiers</h2>
             <!--Configuration des analyses selon le metier. Exemple: Banque, Commerce...-->
@@ -39,29 +30,21 @@
         <section>
             <h2>Système de formation</h2>
             <!--Filtre de regles d'organisation-->
-            <input
-                type="checkbox"
-                id="formation"
-                name="formation"
-            />
+            <input type="checkbox" id="formation" name="formation" />
             <label for="formation">Mode formation</label>
             <br>
-            <input
-                type="checkbox"
-                id="details"
-                name="details"
-            />
+            <input type="checkbox" id="details" name="details" />
             <label for="details">Afficher les détails</label>
+        </section>
+        <section id="categories">
+            <h2>Catégories</h2>
         </section>
         <hr />
 
         <section>
             <h2>Couleur du thème</h2>
             <label for="color">Thème: </label>
-            <input
-                type="color"
-                id="color"
-            >
+            <input type="color" id="color">
             </select>
         </section>
         <hr />
@@ -79,11 +62,7 @@
         <p id="status"></p>
     </div>
 
-    <section id="categories">
-        <h2>Catégories</h2>
-    </section>
-
-    <script src="../trick-list-options.js"></script>
+    <script src="./trick-list-options.js"></script>
 </body>
 
 </html>

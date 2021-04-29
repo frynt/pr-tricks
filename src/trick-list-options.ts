@@ -1,5 +1,6 @@
 import { TrickList } from './data/trick-list';
 import { Trick } from './interfaces/trick.interface';
+import { getListFromHttp } from './utils/request.utils';
 
 // Doc from https://developer.chrome.com/docs/extensions/mv3/options/
 
@@ -11,9 +12,11 @@ import { Trick } from './interfaces/trick.interface';
 export class TrickListOptions {
     private static _categories: string[] = [];
     private static _trickPreferences: string[] = [];
+    private static _extTricks: Record<string, any>[] = [];
 
     constructor() {
         TrickListOptions._categories = TrickListOptions._getCategories();
+        TrickListOptions._extTricks = TrickListOptions._addHtppTricks();
 
         document.addEventListener('DOMContentLoaded', () => TrickListOptions._init());
         document.getElementById('formation').addEventListener('change', () => TrickListOptions._showFormationMode());
@@ -41,6 +44,7 @@ export class TrickListOptions {
         TrickListOptions._restoreOptions();
         TrickListOptions._displayCategories();
         document.getElementById('save').addEventListener('click', TrickListOptions._saveOptions);
+        document.getElementById('subList').addEventListener('click', TrickListOptions._addHtppTricks);
     }
 
     /**
@@ -132,10 +136,35 @@ export class TrickListOptions {
         const activated = (document.getElementById('formation') as HTMLInputElement);
 
         if (activated.checked) {
-            section.style.visibility = 'visible';
+            section.style.display = 'block';
         } else {
-            section.style.visibility = 'hidden';
+            section.style.display = 'none';
         }
+    }
+
+    private static _fusionTricks(): void {
+        TrickListOptions._extTricks.map((element) => {
+            if (!TrickListOptions._categories.includes(element.name)) {
+                TrickListOptions._categories.push(element.name);
+            }
+        });
+    }
+
+    private static _addHtppTricks(): Record<string, any>[] {
+        const tab = [];
+        const url = (document.getElementById('url') as HTMLInputElement).value;
+
+        if (url === null) {
+            console.log('url is empty');
+        } else {
+            getListFromHttp(url).then((res: Record<string, any>) => {
+                tab.push(res);
+            })
+                .catch((err) => {
+                    console.log('error', err);
+                });
+        }
+        return tab;
     }
 }
 
