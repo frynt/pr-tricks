@@ -9,7 +9,7 @@ import { getListFromHttp } from './utils/request.utils';
 /**
  * @class
  * @name TrickListOptions
- * @description This class set trick list options
+ * @description TrickListOptions class set trick list options
  */
 export class TrickListOptions {
     private static _categories: string[] = [];
@@ -24,9 +24,9 @@ export class TrickListOptions {
      * @description Loaded at page start
      */
     private static async _init(): Promise<void> {
-        this._getCategories();
-        await this._restoreOptions();
-        this._displayCategories();
+        TrickListOptions._setCategories();
+        TrickListOptions._restoreOptions();
+        TrickListOptions._displayCategories();
 
         document.getElementById('save').addEventListener('click', TrickListOptions._saveOptions);
         document.getElementById('subList').addEventListener('click', TrickListOptions._addTricksFromURL);
@@ -35,10 +35,10 @@ export class TrickListOptions {
     /**
      * @description Get each unique categories from trickList array
      */
-    private static _getCategories(): void {
+    private static _setCategories(): void {
         TrickList.map((element: Trick) => {
-            if (!this._categories.includes(element.name)) {
-                this._categories.push(element.name);
+            if (!TrickListOptions._categories.includes(element.name)) {
+                TrickListOptions._categories.push(element.name);
             }
         });
     }
@@ -51,11 +51,11 @@ export class TrickListOptions {
         const formationCheck = (document.getElementById('formation') as HTMLInputElement).checked;
         const detailsCheck = (document.getElementById('details') as HTMLInputElement).checked;
 
-        this._categories.map((element: string) => {
+        TrickListOptions._categories.map((element: string) => {
             const checkbox = (document.getElementById(element) as HTMLInputElement);
 
             if (checkbox.checked) {
-                this._trickPreferences.push(element);
+                TrickListOptions._trickPreferences.push(element);
             }
         });
 
@@ -66,7 +66,7 @@ export class TrickListOptions {
             formation: {
                 detailIsActivated: detailsCheck,
                 isActivated: formationCheck,
-                tricksNameChecked: JSON.stringify(this._trickPreferences),
+                tricksNameChecked: JSON.stringify(TrickListOptions._trickPreferences),
             },
         } as ChromeStorageType, () => {
             // Update status to let user know options were saved.
@@ -78,61 +78,57 @@ export class TrickListOptions {
             }, 2000);
         });
 
-        this._restoreOptions();
+        TrickListOptions._restoreOptions();
     }
 
     /**
      * @description Restores select box and checkbox state using the preferences
      *              stored in chrome.storage.
      */
-    private static _restoreOptions(): Promise<void> {
-        return new Promise((resolve) => {
-            chrome.storage.sync.get(
-                async (items: ChromeStorageType) => {
-                    (document.getElementById('color') as HTMLInputElement).value = items.config.favoriteColor;
-                    document.body.style.backgroundColor = (document.getElementById('color') as HTMLInputElement).value;
-                    (document.getElementById('formation') as HTMLInputElement).checked = items.formation.isActivated;
-                    (document.getElementById('details') as HTMLInputElement).checked = items.formation.detailIsActivated;
+    private static _restoreOptions(): void {
+        chrome.storage.sync.get(
+            async (items: ChromeStorageType) => {
+                console.log(items);
+                (document.getElementById('color') as HTMLInputElement).value = items.config.favoriteColor;
+                document.body.style.backgroundColor = (document.getElementById('color') as HTMLInputElement).value;
+                (document.getElementById('formation') as HTMLInputElement).checked = items.formation.isActivated;
+                (document.getElementById('details') as HTMLInputElement).checked = items.formation.detailIsActivated;
 
-                    const tricksNameChecked: string[] = JSON.parse(items.formation.tricksNameChecked);
+                const tricksNameChecked: string[] = JSON.parse(items.formation.tricksNameChecked);
 
-                    this._categories.forEach((element: string) => {
-                        if (tricksNameChecked.includes(element)) {
-                            (document.getElementById(element) as HTMLInputElement).checked = true;
-                        } else {
-                            (document.getElementById(element) as HTMLInputElement).checked = false;
-                        }
-
-                        this._showFormationMode();
-                    });
-                    // Set trick from url
-                    if (items.extTricks.tricksFromUrl !== undefined) {
-                        const tricksFromURL: Trick[] = JSON.parse(items.extTricks.tricksFromUrl);
-
-                        await this._fusionTricks({
-                            isInitFromUrl: false,
-                            newTricks: tricksFromURL,
-                        });
+                TrickListOptions._categories.forEach((element: string) => {
+                    if (tricksNameChecked.includes(element)) {
+                        (document.getElementById(element) as HTMLInputElement).checked = true;
+                    } else {
+                        (document.getElementById(element) as HTMLInputElement).checked = false;
                     }
-                },
-            );
 
-            console.log('restore', this._categories);
-            resolve();
-        });
+                    TrickListOptions._showFormationMode();
+                });
+                // Set trick from url
+                if (items.extTricks !== undefined && items.extTricks.tricksFromUrl !== undefined) {
+                    const tricksFromURL: Trick[] = JSON.parse(items.extTricks.tricksFromUrl);
+
+                    await TrickListOptions._fusionTricks({
+                        isInitFromUrl: false,
+                        newTricks: tricksFromURL,
+                    });
+                }
+            },
+        );
     }
 
     /**
      * @description Display label and checkbox foreach categories
      */
     private static _displayCategories(): void {
-        console.log('display', this._categories);
+        console.log('display', TrickListOptions._categories);
         const section = (document.getElementById('categories') as HTMLInputElement);
         while (section.firstChild) {
             section.removeChild(section.firstChild);
         }
 
-        this._categories.forEach((element: string) => {
+        TrickListOptions._categories.forEach((element: string) => {
             const input = document.createElement('input');
             const label = document.createElement('label');
 
@@ -168,14 +164,14 @@ export class TrickListOptions {
         (document.getElementById('url') as HTMLInputElement).value = '';
 
         const newTricks = await getListFromHttp(url);
-        await this._fusionTricks({
+        await TrickListOptions._fusionTricks({
             newTricks,
             isInitFromUrl: true,
         });
 
-        this._init();
+        TrickListOptions._init();
 
-        this._setDisplayExternalTricks(url);
+        TrickListOptions._setDisplayExternalTricks(url);
     }
 
     /**
@@ -197,7 +193,7 @@ export class TrickListOptions {
     }): Promise<void> {
         if (params.newTricks === null || !IsArrayTricks(params.newTricks)) {
             // eslint-disable-next-line no-alert
-            alert('Attention votre listes de tricks est vide ou dans un format non supporté');
+            alert('Attention votre liste de tricks est vide ou dans un format non supporté');
         } else {
             const extTricks = [];
 
@@ -211,13 +207,13 @@ export class TrickListOptions {
                             // Push in url tricks list for set in chrome storage
                             extTricks.push(extTrick);
                             // Add categories
-                            this._categories.push(extTrick.name);
+                            TrickListOptions._categories.push(extTrick.name);
                         }
                     },
                 ),
             );
 
-            console.log('fusion', this._categories);
+            console.log('fusion', TrickListOptions._categories);
 
             if (params.isInitFromUrl) {
                 chrome.storage.sync.set({
