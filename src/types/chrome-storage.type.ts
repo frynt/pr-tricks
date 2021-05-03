@@ -7,4 +7,7 @@ export type ChromeStorageType = {
         tricksNameChecked: string;
         detailIsActivated: boolean;
     };
+    extTricks: {
+        tricksFromUrl: string;
+    };
 };
