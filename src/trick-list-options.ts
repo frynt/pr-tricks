@@ -1,5 +1,6 @@
 import { TrickList } from './data/trick-list';
 import { Trick } from './interfaces/trick.interface';
+import { ChromeStorageType } from './types/chrome-storage.type';
 import { getListFromHttp } from './utils/request.utils';
 
 // Doc from https://developer.chrome.com/docs/extensions/mv3/options/
@@ -12,11 +13,22 @@ import { getListFromHttp } from './utils/request.utils';
 export class TrickListOptions {
     private static _categories: string[] = [];
     private static _trickPreferences: string[] = [];
-    private static _extTricks: Trick[] = [];
+    private static _extURLTricks: Trick[] = [];
 
     constructor() {
         document.addEventListener('DOMContentLoaded', () => TrickListOptions._init());
         document.getElementById('formation').addEventListener('change', () => TrickListOptions._showFormationMode());
+    }
+
+    /**
+     * @description Loaded at page start
+     */
+    private static _init(): void {
+        TrickListOptions._getCategories();
+        TrickListOptions._displayCategories();
+        TrickListOptions._restoreOptions();
+        document.getElementById('save').addEventListener('click', TrickListOptions._saveOptions);
+        document.getElementById('subList').addEventListener('click', TrickListOptions._addTricksFromURL);
     }
 
     /**
@@ -28,17 +40,6 @@ export class TrickListOptions {
                 TrickListOptions._categories.push(element.name);
             }
         });
-    }
-
-    /**
-     * @description Loaded at page start
-     */
-    private static _init(): void {
-        TrickListOptions._getCategories();
-        TrickListOptions._displayCategories();
-        TrickListOptions._restoreOptions();
-        document.getElementById('save').addEventListener('click', TrickListOptions._saveOptions);
-        document.getElementById('subList').addEventListener('click', TrickListOptions._addHtppTricks);
     }
 
     /**
@@ -58,11 +59,15 @@ export class TrickListOptions {
         });
 
         chrome.storage.sync.set({
-            favoriteColor: color,
-            formationActivated: formationCheck,
-            formationPreferences: JSON.stringify(TrickListOptions._trickPreferences),
-            formationDetails: detailsCheck,
-        }, () => {
+            config: {
+                favoriteColor: color,
+            },
+            formation: {
+                detailIsActivated: detailsCheck,
+                isActivated: formationCheck,
+                tricksNameChecked: JSON.stringify(TrickListOptions._trickPreferences),
+            },
+        } as ChromeStorageType, () => {
             // Update status to let user know options were saved.
             const status = document.getElementById('status');
             status.textContent = 'Options saved.';
@@ -81,18 +86,24 @@ export class TrickListOptions {
      */
     private static _restoreOptions(): void {
         chrome.storage.sync.get({
-            favoriteColor: '',
-            formationActivated: '',
-            formationPreferences: [],
-            formationDetails: '',
-        }, (items: Record<string, any>) => {
-            (document.getElementById('color') as HTMLInputElement).value = items.favoriteColor;
+            config: {
+                favoriteColor: '',
+            },
+            formation: {
+                detailIsActivated: false,
+                isActivated: false,
+                tricksNameChecked: '',
+            },
+        } as ChromeStorageType, (items: ChromeStorageType) => {
+            (document.getElementById('color') as HTMLInputElement).value = items.config.favoriteColor;
             document.body.style.backgroundColor = (document.getElementById('color') as HTMLInputElement).value;
-            (document.getElementById('formation') as HTMLInputElement).checked = items.formationActivated;
-            (document.getElementById('details') as HTMLInputElement).checked = items.formationDetails;
+            (document.getElementById('formation') as HTMLInputElement).checked = items.formation.isActivated;
+            (document.getElementById('details') as HTMLInputElement).checked = items.formation.detailIsActivated;
+
+            const tricksNameChecked: string[] = JSON.parse(items.formation.tricksNameChecked);
 
             TrickListOptions._categories.map((element: string) => {
-                if (items.formationPreferences.includes(element)) {
+                if (tricksNameChecked.includes(element)) {
                     (document.getElementById(element) as HTMLInputElement).checked = true;
                 } else {
                     (document.getElementById(element) as HTMLInputElement).checked = false;
@@ -142,13 +153,20 @@ export class TrickListOptions {
     /**
      * @description Get new trickList from XMLHtppRequest (see request.utils)
      */
-    private static async _addHtppTricks(): Promise<void> {
+    private static async _addTricksFromURL(): Promise<void> {
         const url = (document.getElementById('url') as HTMLInputElement).value;
         (document.getElementById('url') as HTMLInputElement).value = '';
 
-        TrickListOptions._extTricks = await getListFromHttp(url);
+        TrickListOptions._extURLTricks = await getListFromHttp(url);
         TrickListOptions._fusionTricks();
 
+        TrickListOptions._setDisplayExternalTricks(url);
+    }
+
+    /**
+     * @description Set url in option page
+     */
+    private static _setDisplayExternalTricks(url: string): void {
         const section = (document.getElementById('activeLists') as HTMLInputElement);
         const li = document.createElement('li');
         li.innerHTML = url;
@@ -156,24 +174,25 @@ export class TrickListOptions {
     }
 
     /**
-     * @description Mix/Add new Tricks from url api
+     * @description Mix/Add new Tricks from url | file
      */
     private static _fusionTricks(): void {
-        if (TrickListOptions._extTricks === null) {
+        if (TrickListOptions._extURLTricks === null) {
             // eslint-disable-next-line no-alert
             alert('_fusionTricks error: _extTricks is null');
         } else {
-            TrickListOptions._extTricks.map((element) => {
-                if (!TrickList.includes(element)) {
-                    TrickList.push(element);
+            TrickListOptions._extURLTricks.map((extUrlTrick: Trick) => {
+                if (!TrickList.includes(extUrlTrick)) {
+                    TrickList.push(extUrlTrick);
                 }
             });
 
-            TrickList.map((elem) => {
-                if (!TrickListOptions._categories.includes(elem.name)) {
-                    TrickListOptions._categories.push(elem.name);
+            TrickList.map((trick: Trick) => {
+                if (!TrickListOptions._categories.includes(trick.name)) {
+                    TrickListOptions._categories.push(trick.name);
                 }
             });
+
             TrickListOptions._init();
         }
     }
