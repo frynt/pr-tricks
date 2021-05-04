@@ -88,7 +88,6 @@ export class TrickListOptions {
     private static _restoreOptions(): void {
         chrome.storage.sync.get(
             async (items: ChromeStorageType) => {
-                console.log(items);
                 (document.getElementById('color') as HTMLInputElement).value = items.config.favoriteColor;
                 document.body.style.backgroundColor = (document.getElementById('color') as HTMLInputElement).value;
                 (document.getElementById('formation') as HTMLInputElement).checked = items.formation.isActivated;
@@ -169,15 +168,13 @@ export class TrickListOptions {
             isInitFromUrl: true,
         });
 
-        TrickListOptions._init();
-
-        TrickListOptions._setDisplayExternalTricks(url);
+        TrickListOptions._setDisplayExternalList(url);
     }
 
     /**
      * @description Set url in option page
      */
-    private static _setDisplayExternalTricks(url: string): void {
+    private static _setDisplayExternalList(url: string): void {
         const section = (document.getElementById('activeLists') as HTMLInputElement);
         const li = document.createElement('li');
         li.innerHTML = url;
@@ -185,7 +182,7 @@ export class TrickListOptions {
     }
 
     /**
-     * @description Mix/Add new Tricks from url | file
+     * @description Add new Tricks from url | file to categories
      */
     private static async _fusionTricks(params: {
         newTricks: Trick[];
@@ -207,7 +204,9 @@ export class TrickListOptions {
                             // Push in url tricks list for set in chrome storage
                             extTricks.push(extTrick);
                             // Add categories
-                            TrickListOptions._categories.push(extTrick.name);
+                            if (!TrickListOptions._categories.includes(extTrick.name)) {
+                                TrickListOptions._categories.push(extTrick.name);
+                            }
                         }
                     },
                 ),
@@ -222,6 +221,8 @@ export class TrickListOptions {
                     },
                 } as ChromeStorageType);
             }
+
+            TrickListOptions._displayCategories();
         }
     }
 }

@@ -5,7 +5,7 @@ body {
 }
 
 h1 {
-  text-align: left;
+  text-align: center;
 }
 
 label {
@@ -31,9 +31,8 @@ button {
   display: none;
 }
 
-#space {
-  margin: 200%;
-  visibility: collapse;
+input {
+  font-size: medium;
 }
 
 /*# sourceMappingURL=options.css.map */
