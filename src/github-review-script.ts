@@ -53,12 +53,10 @@ export class GithubReviewScripts {
         const matchedTricks: MatchedTrick[] = [];
         const formationTrickList: Trick[] = [];
 
-        chrome.storage.sync.get(async (items: ChromeStorageType) => {
+        chrome.storage.sync.get((items: ChromeStorageType) => {
             TrickList.forEach((trick) => {
-                if (items.formation.isActivated) {
-                    if (items.formation.tricksNameChecked.includes(trick.name)) {
-                        formationTrickList.push(trick);
-                    }
+                if (items.formation.isActivated && items.formation.tricksNameChecked.includes(trick.name)) {
+                    formationTrickList.push(trick);
                 } else {
                     formationTrickList.push(trick);
                 }
@@ -85,7 +83,7 @@ export class GithubReviewScripts {
      */
     private _setTricksHighlight(
         matchedTricks: MatchedTrick[],
-        items: Record<string, any>,
+        items: Record < string, any >,
         element: HTMLElement,
     ): void {
         if (matchedTricks.length > 0) {
