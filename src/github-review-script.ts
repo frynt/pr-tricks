@@ -92,22 +92,26 @@ export class GithubReviewScripts {
 
             matchTricksUnique.forEach((trick, index) => {
                 let trickCaptured = trick.captured.join('');
+
                 if (trickCaptured.length > 0) {
                     trickCaptured = ` ${trickCaptured}`;
                 }
 
                 let trickDetails = '';
+
                 if (items.formation.detailIsActivated) {
                     trickDetails = trick.details;
                 }
 
                 htmlTricks += `<span title="${trickDetails}" style="color:${trick.color}">${trick.emoji}${trickCaptured}</span>`;
+
                 if (index + 1 < matchTricksUnique.length) {
                     htmlTricks += ' - ';
                 }
             });
 
             const backColor = items.config.favoriteColor;
+
             element.insertAdjacentHTML('beforeend', `<div style="display: inline-block;border-radius: 6px;font-size:15px; border: 1px solid black;background-color:${backColor};padding: 1px 1px 1px 1px; vertical-align: middle;">${htmlTricks}</div>`);
         }
     }

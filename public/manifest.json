@@ -11,8 +11,7 @@
   ],
   "host_permissions": [
     "https://github.com/*",
-    "https://www.google.com/",
-    "https://mocki.io/v1/f2cc018a-2692-4c00-9314-a947d38ae3ee"
+    "https://www.google.com/"
   ],
   "content_scripts": [
     {

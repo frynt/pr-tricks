@@ -1,11 +1,10 @@
 import { TrickList } from './data/trick-list';
 import { Trick } from './interfaces/trick.interface';
 import { ChromeStorageType } from './types/chrome-storage.type';
-import { IsArrayTricks } from './utils/is-tricks.utils';
 import { getListFromHttp } from './utils/request.utils';
 
 // Doc from https://developer.chrome.com/docs/extensions/mv3/options/
-
+// eslint-disable-global
 /**
  * @class
  * @name TrickListOptions
@@ -25,7 +24,7 @@ export class TrickListOptions {
     /**
      * @description Loaded at page start
      */
-    private static async _init(): Promise<void> {
+    private static _init(): void {
         TrickListOptions._setCategories();
         TrickListOptions._restoreOptions();
         TrickListOptions._displayCategories();
@@ -139,14 +138,19 @@ export class TrickListOptions {
      */
     private static _displayCategories(): void {
         const section = (document.getElementById('categories') as HTMLInputElement);
+
         while (section.firstChild) {
             section.removeChild(section.firstChild);
         }
+
         TrickListOptions._categories.forEach((element) => {
             TrickListOptions._addCategories(element);
         });
     }
 
+    /**
+     * @description Add HTML input and label foreach valide trick categories
+     */
     private static _addCategories(element: string): void {
         const section = (document.getElementById('categories') as HTMLInputElement);
         const input = document.createElement('input');
@@ -261,33 +265,28 @@ export class TrickListOptions {
      * @description Add new Tricks from url | file to categories
      */
     private static async _fusionTricks(newTricks: Trick[]): Promise<void> {
-        if (newTricks === null || !IsArrayTricks(newTricks)) {
-            // eslint-disable-next-line no-alert
-            alert('Attention votre liste de tricks est vide ou dans un format non supporté');
-        } else {
-            const extTricks: Trick[] = [];
+        const extTricks: Trick[] = [];
 
-            await Promise.all(
-                newTricks.map(
-                    (extTrick: Trick) => {
-                        // If trick list from url is not in default trick list
-                        if (!TrickList.includes(extTrick)) {
-                            // Push in default trick list
-                            TrickList.push(extTrick);
-                            // Push in url tricks list for set in chrome storage
-                            extTricks.push(extTrick);
-                            // Add categories
-                            if (!TrickListOptions._categories.includes(extTrick.name)) {
-                                TrickListOptions._categories.push(extTrick.name);
-                            }
+        await Promise.all(
+            newTricks.map(
+                (extTrick: Trick) => {
+                    // If trick list from url is not in default trick list
+                    if (!TrickList.includes(extTrick)) {
+                        // Push in default trick list
+                        TrickList.push(extTrick);
+                        // Push in url tricks list for set in chrome storage
+                        extTricks.push(extTrick);
+                        // Add categories
+                        if (!TrickListOptions._categories.includes(extTrick.name)) {
+                            TrickListOptions._categories.push(extTrick.name);
                         }
-                    },
-                ),
-            );
+                    }
+                },
+            ),
+        );
 
-            TrickListOptions._tricksFromUrl = extTricks;
-            TrickListOptions._displayCategories();
-        }
+        TrickListOptions._tricksFromUrl = extTricks;
+        TrickListOptions._displayCategories();
     }
 
     /**
