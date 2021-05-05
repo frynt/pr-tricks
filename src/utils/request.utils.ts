@@ -10,6 +10,8 @@ export const getListFromHttp = (url): Promise<Trick[]> => new Promise((resolve, 
                 resolve(xhr.response);
             } else {
                 reject(xhr.status);
+                // eslint-disable-next-line no-alert
+                alert('L\'url ajouté ne correspond pas au format pris en compte (JSON)');
             }
         }
     };

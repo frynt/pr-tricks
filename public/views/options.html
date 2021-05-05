@@ -3,9 +3,18 @@
 
 <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="../styles/options.css">
+    <meta
+        http-equiv="X-UA-Compatible"
+        content="IE=edge"
+    />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    />
+    <link
+        rel="stylesheet"
+        href="../styles/options.css"
+    >
     <title>PR Tricks Options</title>
 </head>
 
@@ -20,33 +29,56 @@
             <ul id="activeLists"></ul>
             <h3>Ajouter une trickList</h3>
             <label for="url">Tapez une URL : </label>
-            <input type="text" id="url" name="url">
-            <input type="button" id="subList" value="OK">
+            <input
+                type="text"
+                id="url"
+                name="url"
+            >
+            <input
+                type="button"
+                id="subList"
+                value="OK"
+            >
             <br>
-            <label for="local">Ajoutez une liste : </label>
-            <input type="file" id="local" name="local">
+            <label for="local">Ajoutez un fichier : </label>
+            <input
+                type="file"
+                id="local"
+                name="local"
+            >
         </section>
         <hr />
 
         <section>
             <h2>Système de formation</h2>
             <!--Filtre de regles d'organisation-->
-            <input type="checkbox" id="formation" name="formation" />
+            <input
+                type="checkbox"
+                id="formation"
+                name="formation"
+            />
             <label for="formation">Mode formation</label>
             <br>
-            <input type="checkbox" id="details" name="details" />
+            <input
+                type="checkbox"
+                id="details"
+                name="details"
+            />
             <label for="details">Afficher les détails</label>
         </section>
         <h2>Catégories</h2>
         <section id="categories">
-            
+
         </section>
         <hr />
 
         <section>
             <h2>Couleur du thème</h2>
             <label for="color">Thème: </label>
-            <input type="color" id="color">
+            <input
+                type="color"
+                id="color"
+            >
             </select>
         </section>
         <hr />
@@ -55,12 +87,14 @@
             <h2>Règles d'organisation</h2>
             <!--Configuration des analyses selon les preferences du developpeur. 
           Exemple: afficher les if, les else, autre chose-->
+        <label for="reset">Appliquer les paramètres par défaut : </label>
+        <input type="button" id="reset" name="reset" value="Restaurer">
         </section>
     </section>
     <hr />
 
     <div id="submit">
-        <button id="save">Save</button>
+        <button id="save">Sauvegarder</button>
         <p id="status"></p>
     </div>
 
