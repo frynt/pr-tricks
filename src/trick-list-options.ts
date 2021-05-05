@@ -31,8 +31,8 @@ export class TrickListOptions {
         TrickListOptions._displayCategories();
 
         document.getElementById('save').addEventListener('click', TrickListOptions._saveOptions);
-        document.getElementById('subList').addEventListener('click', TrickListOptions._addTricksFromURL);
-        document.getElementById('reset').addEventListener('click', TrickListOptions._resetTricks);
+        document.getElementById('url-submit').addEventListener('click', TrickListOptions._addTricksFromURL);
+        document.getElementById('reset-storage').addEventListener('click', TrickListOptions._resetTricks);
     }
 
     /**
@@ -115,9 +115,7 @@ export class TrickListOptions {
                 if (items.extTricks !== undefined && items.extTricks.tricksFromUrl !== undefined) {
                     const tricksFromURL: Trick[] = JSON.parse(items.extTricks.tricksFromUrl);
 
-                    await TrickListOptions._fusionTricks({
-                        newTricks: tricksFromURL,
-                    });
+                    await TrickListOptions._fusionTricks(tricksFromURL);
                 }
 
                 // Set categories from api storage
@@ -185,9 +183,7 @@ export class TrickListOptions {
         (document.getElementById('url') as HTMLInputElement).value = '';
 
         const newTricks = await getListFromHttp(url);
-        await TrickListOptions._fusionTricks({
-            newTricks,
-        });
+        await TrickListOptions._fusionTricks(newTricks);
 
         if (!TrickListOptions._urlList.includes(url)) {
             TrickListOptions._urlList.push(url);
@@ -217,6 +213,9 @@ export class TrickListOptions {
         }
     }
 
+    /**
+     * @description Add url on HTML options page
+     */
     private static _addURL(url: string): void {
         const section = (document.getElementById('activeLists') as HTMLElement);
         const li = document.createElement('li');
@@ -226,6 +225,9 @@ export class TrickListOptions {
         TrickListOptions._removeURL(url);
     }
 
+    /**
+     * @description Update _urlList with new url in chrome storage
+     */
     private static _saveURLtoStorage(): void {
         chrome.storage.sync.set({
             extTricks: {
@@ -258,16 +260,15 @@ export class TrickListOptions {
     /**
      * @description Add new Tricks from url | file to categories
      */
-    private static async _fusionTricks(params: {
-        newTricks: Trick[];
-    }): Promise<void> {
-        if (params.newTricks === null || !IsArrayTricks(params.newTricks)) {
+    private static async _fusionTricks(newTricks: Trick[]): Promise<void> {
+        if (newTricks === null || !IsArrayTricks(newTricks)) {
             // eslint-disable-next-line no-alert
             alert('Attention votre liste de tricks est vide ou dans un format non supporté');
         } else {
             const extTricks: Trick[] = [];
+
             await Promise.all(
-                params.newTricks.map(
+                newTricks.map(
                     (extTrick: Trick) => {
                         // If trick list from url is not in default trick list
                         if (!TrickList.includes(extTrick)) {
@@ -296,9 +297,11 @@ export class TrickListOptions {
         TrickListOptions._categories = [];
         TrickListOptions._trickPreferences = [];
         TrickListOptions._urlList = [];
+
         TrickList.forEach(() => {
             TrickList.pop();
         });
+
         chrome.storage.sync.clear();
         TrickListOptions._restoreOptions();
     }

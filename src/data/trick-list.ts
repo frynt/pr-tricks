@@ -8,7 +8,7 @@ const typeColor = 'white';
 const technicalWarning = 'white';
 
 export const TrickList: Trick[] = [{
-    pattern: '  ',
+    pattern: 'if.*\\(',
     color: logicalColor,
     name: 'logic',
     emoji: '🔧',

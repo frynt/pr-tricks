@@ -54,7 +54,7 @@ export class GithubReviewScripts {
         const formationTrickList: Trick[] = [];
 
         chrome.storage.sync.get(async (items: ChromeStorageType) => {
-            TrickList.map((trick) => {
+            TrickList.forEach((trick) => {
                 if (items.formation.isActivated) {
                     if (items.formation.tricksNameChecked.includes(trick.name)) {
                         formationTrickList.push(trick);
