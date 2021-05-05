@@ -144,7 +144,6 @@ export class TrickListOptions {
         while (section.firstChild) {
             section.removeChild(section.firstChild);
         }
-
         TrickListOptions._categories.forEach((element) => {
             TrickListOptions._addCategories(element);
         });
@@ -245,12 +244,12 @@ export class TrickListOptions {
         btn.setAttribute('type', 'button');
         btn.value = 'X';
         btn.addEventListener('click', () => {
-            li.parentNode.removeChild(li);
-            btn.parentNode.removeChild(btn);
-
             const indexToRemove = TrickListOptions._urlList.indexOf(url);
             TrickListOptions._urlList.splice(indexToRemove);
             TrickListOptions._saveURLtoStorage();
+
+            li.parentNode.removeChild(li);
+            btn.parentNode.removeChild(btn);
         });
 
         li.appendChild(btn);
