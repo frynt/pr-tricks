@@ -15,6 +15,7 @@ export class TrickListOptions {
     private static _categories: string[] = [];
     private static _trickPreferences: string[] = [];
     private static _urlList: string[] = [];
+    private static _tricksFromUrl: Trick[] = [];
 
     constructor() {
         document.addEventListener('DOMContentLoaded', () => TrickListOptions._init());
@@ -71,6 +72,7 @@ export class TrickListOptions {
                 tricksNameChecked: JSON.stringify(TrickListOptions._trickPreferences),
             },
             extTricks: {
+                tricksFromUrl: JSON.stringify(TrickListOptions._tricksFromUrl),
                 urlList: JSON.stringify(TrickListOptions._urlList),
             },
         } as ChromeStorageType, () => {
@@ -114,7 +116,6 @@ export class TrickListOptions {
                     const tricksFromURL: Trick[] = JSON.parse(items.extTricks.tricksFromUrl);
 
                     await TrickListOptions._fusionTricks({
-                        isInitFromUrl: false,
                         newTricks: tricksFromURL,
                     });
                 }
@@ -187,7 +188,6 @@ export class TrickListOptions {
         const newTricks = await getListFromHttp(url);
         await TrickListOptions._fusionTricks({
             newTricks,
-            isInitFromUrl: true,
         });
 
         if (!TrickListOptions._urlList.includes(url)) {
@@ -261,13 +261,13 @@ export class TrickListOptions {
      */
     private static async _fusionTricks(params: {
         newTricks: Trick[];
-        isInitFromUrl: boolean;
     }): Promise<void> {
         if (params.newTricks === null || !IsArrayTricks(params.newTricks)) {
             // eslint-disable-next-line no-alert
             alert('Attention votre liste de tricks est vide ou dans un format non supporté');
         } else {
-            const extTricks = [];
+            const extTricks: Trick[] = [];
+
             await Promise.all(
                 params.newTricks.map(
                     (extTrick: Trick) => {
@@ -285,13 +285,8 @@ export class TrickListOptions {
                     },
                 ),
             );
-            if (params.isInitFromUrl) {
-                chrome.storage.sync.set({
-                    extTricks: {
-                        tricksFromUrl: JSON.stringify(extTricks),
-                    },
-                } as ChromeStorageType);
-            }
+
+            TrickListOptions._tricksFromUrl = extTricks;
 
             TrickListOptions._displayCategories();
         }
