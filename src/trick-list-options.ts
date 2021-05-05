@@ -284,6 +284,7 @@ export class TrickListOptions {
                     },
                 ),
             );
+
             TrickListOptions._tricksFromUrl = extTricks;
             TrickListOptions._displayCategories();
         }
