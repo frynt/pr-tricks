@@ -52,7 +52,7 @@ export class TrickListOptions {
         const color = (document.getElementById('color') as HTMLInputElement).value;
         const formationCheck = (document.getElementById('formation') as HTMLInputElement).checked;
         const detailsCheck = (document.getElementById('details') as HTMLInputElement).checked;
-        console.log(`${TrickListOptions._categories}Saved`);
+
         TrickListOptions._categories.map((element: string) => {
             const checkbox = (document.getElementById(element) as HTMLInputElement);
 
@@ -119,7 +119,6 @@ export class TrickListOptions {
                     });
                 }
 
-                console.log('restore');
                 // Set categories from api storage
                 const tricksNameChecked: string[] = JSON.parse(items.formation.tricksNameChecked);
 
@@ -140,7 +139,6 @@ export class TrickListOptions {
      * @description Display label and checkbox foreach categories
      */
     private static _displayCategories(): void {
-        console.log('display', TrickListOptions._categories);
         const section = (document.getElementById('categories') as HTMLInputElement);
         while (section.firstChild) {
             section.removeChild(section.firstChild);
@@ -287,7 +285,6 @@ export class TrickListOptions {
                     },
                 ),
             );
-            console.log('fusion');
             if (params.isInitFromUrl) {
                 chrome.storage.sync.set({
                     extTricks: {
