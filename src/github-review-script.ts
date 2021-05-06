@@ -2,6 +2,7 @@ import { uniqBy } from 'lodash';
 import { TrickList } from './data/trick-list';
 import { MatchedTrick } from './interfaces/matched-trick.interface';
 import { Trick } from './interfaces/trick.interface';
+import { ChromeStorageType } from './types/chrome-storage.type';
 
 const trickAddedClass = 'trick-added';
 
@@ -52,17 +53,10 @@ export class GithubReviewScripts {
         const matchedTricks: MatchedTrick[] = [];
         const formationTrickList: Trick[] = [];
 
-        chrome.storage.sync.get({
-            favoriteColor: '',
-            formationActivated: '',
-            formationPreferences: [],
-            formationDetails: '',
-        }, (items) => {
-            TrickList.map((trick) => {
-                if (items.formationActivated) {
-                    if (items.formationPreferences.includes(trick.name)) {
-                        formationTrickList.push(trick);
-                    }
+        chrome.storage.sync.get((items: ChromeStorageType) => {
+            TrickList.forEach((trick) => {
+                if (items.formation.isActivated && items.formation.tricksNameChecked.includes(trick.name)) {
+                    formationTrickList.push(trick);
                 } else {
                     formationTrickList.push(trick);
                 }
@@ -89,7 +83,7 @@ export class GithubReviewScripts {
      */
     private _setTricksHighlight(
         matchedTricks: MatchedTrick[],
-        items: Record<string, any>,
+        items: Record < string, any >,
         element: HTMLElement,
     ): void {
         if (matchedTricks.length > 0) {
@@ -98,22 +92,26 @@ export class GithubReviewScripts {
 
             matchTricksUnique.forEach((trick, index) => {
                 let trickCaptured = trick.captured.join('');
+
                 if (trickCaptured.length > 0) {
                     trickCaptured = ` ${trickCaptured}`;
                 }
 
                 let trickDetails = '';
-                if (items.formationDetails) {
+
+                if (items.formation.detailIsActivated) {
                     trickDetails = trick.details;
                 }
 
                 htmlTricks += `<span title="${trickDetails}" style="color:${trick.color}">${trick.emoji}${trickCaptured}</span>`;
+
                 if (index + 1 < matchTricksUnique.length) {
                     htmlTricks += ' - ';
                 }
             });
 
-            const backColor = items.favoriteColor;
+            const backColor = items.config.favoriteColor;
+
             element.insertAdjacentHTML('beforeend', `<div style="display: inline-block;border-radius: 6px;font-size:15px; border: 1px solid black;background-color:${backColor};padding: 1px 1px 1px 1px; vertical-align: middle;">${htmlTricks}</div>`);
         }
     }

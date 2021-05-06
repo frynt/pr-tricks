@@ -24,7 +24,15 @@ button {
 }
 
 #categories {
-  visibility: hidden;
+  display: none;
+}
+
+#trickList {
+  display: none;
+}
+
+input {
+  font-size: medium;
 }
 
 /*# sourceMappingURL=options.css.map */
