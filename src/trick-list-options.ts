@@ -1,10 +1,12 @@
+/* eslint-disable no-new */
+/* eslint-disable no-alert */
 import { TrickList } from './data/trick-list';
 import { Trick } from './interfaces/trick.interface';
 import { ChromeStorageType } from './types/chrome-storage.type';
 import { getListFromHttp } from './utils/request.utils';
 
 // Doc from https://developer.chrome.com/docs/extensions/mv3/options/
-// eslint-disable-global
+
 /**
  * @class
  * @name TrickListOptions
@@ -208,7 +210,6 @@ export class TrickListOptions {
                 TrickListOptions._saveURLtoStorage();
                 TrickListOptions._addURL(url);
             } else {
-                // eslint-disable-next-line no-alert
                 alert("L'url a déjà été ajoutée ");
             }
         } else {
@@ -305,5 +306,5 @@ export class TrickListOptions {
         TrickListOptions._restoreOptions();
     }
 }
-// eslint-disable-next-line no-new
+
 new TrickListOptions();
