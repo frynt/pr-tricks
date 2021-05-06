@@ -20,7 +20,6 @@ export class TrickListOptions {
 
     constructor() {
         document.addEventListener('DOMContentLoaded', () => TrickListOptions._init());
-        document.getElementById('formation').addEventListener('change', () => TrickListOptions._showFormationMode());
     }
 
     /**
@@ -31,6 +30,7 @@ export class TrickListOptions {
         TrickListOptions._restoreOptions();
         TrickListOptions._displayCategories();
 
+        document.getElementById('formation').addEventListener('change', () => TrickListOptions._showFormationMode());
         document.getElementById('save').addEventListener('click', TrickListOptions._saveOptions);
         document.getElementById('url-submit').addEventListener('click', TrickListOptions._addTricksFromURL);
         document.getElementById('reset-storage').addEventListener('click', TrickListOptions._resetTricks);
@@ -294,16 +294,34 @@ export class TrickListOptions {
      * @description Clear all list of tricks and options preferences
      */
     private static _resetTricks(): void {
-        TrickListOptions._categories = [];
+        chrome.storage.sync.clear();
+
         TrickListOptions._trickPreferences = [];
         TrickListOptions._urlList = [];
+        TrickListOptions._tricksFromUrl = [];
 
         TrickList.forEach(() => {
             TrickList.pop();
         });
 
-        chrome.storage.sync.clear();
-        TrickListOptions._restoreOptions();
+        const defaultColor = '#FF0000';
+
+        chrome.storage.sync.set({
+            config: {
+                favoriteColor: defaultColor,
+            },
+            formation: {
+                isActivated: false,
+                tricksNameChecked: JSON.stringify(TrickListOptions._trickPreferences),
+                detailIsActivated: false,
+            },
+            extTricks: {
+                tricksFromUrl: JSON.stringify(TrickListOptions._tricksFromUrl),
+                urlList: JSON.stringify(TrickListOptions._urlList),
+            },
+        } as ChromeStorageType);
+
+        TrickListOptions._init();
     }
 }
 
