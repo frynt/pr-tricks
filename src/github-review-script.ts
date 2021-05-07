@@ -83,8 +83,14 @@ export class GithubReviewScripts {
         if (items.extTricks !== undefined) {
             const externalTrickList = (JSON.parse(items.extTricks.tricksFromUrl) as Trick[]);
             await Promise.all(
-                externalTrickList.map((trick: Trick) => {
-                    TrickList.push(trick);
+                externalTrickList.map((trick) => {
+                    if (items.formation.isActivated) {
+                        if (items.formation.tricksNameChecked.includes(trick.name)) {
+                            trickList.push(trick);
+                        }
+                    } else {
+                        trickList.push(trick);
+                    }
                 }),
             );
         }
