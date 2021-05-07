@@ -55,13 +55,12 @@ export class GithubReviewScripts {
 
         chrome.storage.sync.get((items: ChromeStorageType) => {
             TrickList.forEach((trick) => {
-                if (items.formation.isActivated && items.formation.tricksNameChecked.includes(trick.name)) {
+                if (items.formation !== undefined && items.formation.isActivated && items.formation.tricksNameChecked.includes(trick.name)) {
                     formationTrickList.push(trick);
                 } else {
                     formationTrickList.push(trick);
                 }
             });
-            console.log(formationTrickList);
 
             formationTrickList.forEach((trick) => {
                 const match = new RegExp(trick.pattern, 'gi').exec(element.innerText);
@@ -84,7 +83,7 @@ export class GithubReviewScripts {
      */
     private _setTricksHighlight(
         matchedTricks: MatchedTrick[],
-        items: Record < string, any >,
+        items: Record<string, any>,
         element: HTMLElement,
     ): void {
         if (matchedTricks.length > 0) {
@@ -100,7 +99,7 @@ export class GithubReviewScripts {
 
                 let trickDetails = '';
 
-                if (items.formation.detailIsActivated) {
+                if (items.formation !== undefined && items.formation.detailIsActivated) {
                     trickDetails = trick.details;
                 }
 
