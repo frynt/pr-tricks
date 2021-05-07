@@ -61,6 +61,7 @@ export class GithubReviewScripts {
                     formationTrickList.push(trick);
                 }
             });
+            console.log(formationTrickList);
 
             formationTrickList.forEach((trick) => {
                 const match = new RegExp(trick.pattern, 'gi').exec(element.innerText);
