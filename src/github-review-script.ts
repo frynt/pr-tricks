@@ -80,28 +80,29 @@ export class GithubReviewScripts {
      * @description Set external trick list if exist
      */
     private async _setExternalTrickList(items: ChromeStorageType, trickList: Trick[]): Promise<void> {
-        const externalTrickList = (JSON.parse(items.extTricks.tricksFromUrl) as Trick[]);
+        if (items.extTricks !== undefined) {
+            const externalTrickList = (JSON.parse(items.extTricks.tricksFromUrl) as Trick[]);
 
-        await Promise.all(
-            externalTrickList.map((trick: Trick) => {
-                // To update tricksNameChecked, move this in config => items.config.tricksNameChecked
-                if (items.formation.tricksNameChecked.includes(trick.name)) {
-                    trickList.push(trick);
-                } else {
-                    trickList.push(trick);
-                }
-            }),
-        );
+            await Promise.all(
+                externalTrickList.map((trick: Trick) => {
+                    if (items.formation.isActivated && items.formation.tricksNameChecked.includes(trick.name)) {
+                        trickList.push(trick);
+                    } else {
+                        trickList.push(trick);
+                    }
+                }),
+            );
+        }
     }
 
     /**
      * @description Set formation trick list if is activated
      */
     private async _setFormationTrickList(items: ChromeStorageType, trickList: Trick[]): Promise<void> {
-        if (items.formation !== undefined && items.formation.isActivated) {
+        if (items.formation !== undefined) {
             await Promise.all(
                 TrickList.map((trick) => {
-                    if (items.formation.tricksNameChecked.includes(trick.name)) {
+                    if (items.formation.isActivated && items.formation.tricksNameChecked.includes(trick.name)) {
                         trickList.push(trick);
                     } else {
                         trickList.push(trick);
