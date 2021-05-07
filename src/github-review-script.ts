@@ -120,7 +120,7 @@ export class GithubReviewScripts {
      */
     private _setTricksHighlight(
         matchedTricks: MatchedTrick[],
-        items: Record<string, any>,
+        items: ChromeStorageType,
         element: HTMLElement,
     ): void {
         if (matchedTricks.length > 0) {
