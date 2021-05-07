@@ -56,8 +56,8 @@ export class GithubReviewScripts {
         const trickList: Trick[] = [];
 
         chrome.storage.sync.get(async (items: ChromeStorageType) => {
-            await this._setFormationTrickList(items, trickList);
             await this._setExternalTrickList(items, trickList);
+            await this._setFormationTrickList(items, trickList);
 
             trickList.forEach((trick) => {
                 const match = new RegExp(trick.pattern, 'gi').exec(element.innerText);
@@ -82,14 +82,9 @@ export class GithubReviewScripts {
     private async _setExternalTrickList(items: ChromeStorageType, trickList: Trick[]): Promise<void> {
         if (items.extTricks !== undefined) {
             const externalTrickList = (JSON.parse(items.extTricks.tricksFromUrl) as Trick[]);
-
             await Promise.all(
                 externalTrickList.map((trick: Trick) => {
-                    if (items.formation.isActivated && items.formation.tricksNameChecked.includes(trick.name)) {
-                        trickList.push(trick);
-                    } else {
-                        trickList.push(trick);
-                    }
+                    TrickList.push(trick);
                 }),
             );
         }
@@ -102,8 +97,10 @@ export class GithubReviewScripts {
         if (items.formation !== undefined) {
             await Promise.all(
                 TrickList.map((trick) => {
-                    if (items.formation.isActivated && items.formation.tricksNameChecked.includes(trick.name)) {
-                        trickList.push(trick);
+                    if (items.formation.isActivated) {
+                        if (items.formation.tricksNameChecked.includes(trick.name)) {
+                            trickList.push(trick);
+                        }
                     } else {
                         trickList.push(trick);
                     }
