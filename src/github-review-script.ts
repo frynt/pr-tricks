@@ -1,3 +1,6 @@
+/* eslint-disable no-continue */
+/* eslint-disable no-new */
+
 import { uniqBy } from 'lodash';
 import { TrickList } from './data/trick-list';
 import { MatchedTrick } from './interfaces/matched-trick.interface';
@@ -35,7 +38,6 @@ export class GithubReviewScripts {
 
         for await (const element of elements) {
             if (!(element instanceof HTMLElement)) {
-                // eslint-disable-next-line no-continue
                 continue;
             }
             element.classList.add(trickAddedClass);
@@ -51,19 +53,15 @@ export class GithubReviewScripts {
         element: HTMLElement,
     ): void {
         const matchedTricks: MatchedTrick[] = [];
-        const formationTrickList: Trick[] = [];
+        const trickList: Trick[] = [];
 
-        chrome.storage.sync.get((items: ChromeStorageType) => {
-            TrickList.forEach((trick) => {
-                if (items.formation !== undefined && items.formation.isActivated && items.formation.tricksNameChecked.includes(trick.name)) {
-                    formationTrickList.push(trick);
-                } else {
-                    formationTrickList.push(trick);
-                }
-            });
+        chrome.storage.sync.get(async (items: ChromeStorageType) => {
+            await this._setFormationTrickList(items, trickList);
+            await this._setExternalTrickList(items, trickList);
 
-            formationTrickList.forEach((trick) => {
+            trickList.forEach((trick) => {
                 const match = new RegExp(trick.pattern, 'gi').exec(element.innerText);
+
                 if (match) {
                     const captured = match.slice(1, match.length);
                     matchedTricks.push({
@@ -76,6 +74,41 @@ export class GithubReviewScripts {
 
             this._setTricksHighlight(matchedTricks, items, element);
         });
+    }
+
+    /**
+     * @description Set external trick list if exist
+     */
+    private async _setExternalTrickList(items: ChromeStorageType, trickList: Trick[]): Promise<void> {
+        const externalTrickList = (JSON.parse(items.extTricks.tricksFromUrl) as Trick[]);
+
+        await Promise.all(
+            externalTrickList.map((trick: Trick) => {
+                // To update tricksNameChecked, move this in config => items.config.tricksNameChecked
+                if (items.formation.tricksNameChecked.includes(trick.name)) {
+                    trickList.push(trick);
+                } else {
+                    trickList.push(trick);
+                }
+            }),
+        );
+    }
+
+    /**
+     * @description Set formation trick list if is activated
+     */
+    private async _setFormationTrickList(items: ChromeStorageType, trickList: Trick[]): Promise<void> {
+        if (items.formation !== undefined && items.formation.isActivated) {
+            await Promise.all(
+                TrickList.map((trick) => {
+                    if (items.formation.tricksNameChecked.includes(trick.name)) {
+                        trickList.push(trick);
+                    } else {
+                        trickList.push(trick);
+                    }
+                }),
+            );
+        }
     }
 
     /**
@@ -117,5 +150,4 @@ export class GithubReviewScripts {
     }
 }
 
-// eslint-disable-next-line no-new
 new GithubReviewScripts();
