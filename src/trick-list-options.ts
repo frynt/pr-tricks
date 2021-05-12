@@ -120,17 +120,19 @@ export class TrickListOptions {
                 }
 
                 // Set categories from api storage
-                const tricksNameChecked: string[] = JSON.parse(items.formation.tricksNameChecked);
+                if (items.formation.tricksNameChecked.length !== 0) {
+                    const tricksNameChecked: string[] = JSON.parse(items.formation.tricksNameChecked);
 
-                TrickListOptions._categories.forEach((element: string) => {
-                    if (tricksNameChecked.includes(element)) {
-                        (document.getElementById(element) as HTMLInputElement).checked = true;
-                    } else {
-                        (document.getElementById(element) as HTMLInputElement).checked = false;
-                    }
+                    TrickListOptions._categories.forEach((element: string) => {
+                        if (tricksNameChecked.includes(element)) {
+                            (document.getElementById(element) as HTMLInputElement).checked = true;
+                        } else {
+                            (document.getElementById(element) as HTMLInputElement).checked = false;
+                        }
 
-                    TrickListOptions._showFormationMode();
-                });
+                        TrickListOptions._showFormationMode();
+                    });
+                }
             },
         );
     }
