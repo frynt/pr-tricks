@@ -3,6 +3,7 @@
 import { TrickList } from './data/trick-list';
 import { Trick } from './interfaces/trick.interface';
 import { ChromeStorageType } from './types/chrome-storage.type';
+import { ExternalTricks } from './types/external-tricks.type';
 import { getListFromHttp } from './utils/request.utils';
 
 // Doc from https://developer.chrome.com/docs/extensions/mv3/options/
@@ -16,7 +17,7 @@ export class TrickListOptions {
     private static _categories: string[] = [];
     private static _trickPreferences: string[] = [];
     private static _urlList: string[] = [];
-    private static _tricksFromUrl: Trick[] = [];
+    private static _externalTricks: ExternalTricks = {};
 
     constructor() {
         document.addEventListener('DOMContentLoaded', () => TrickListOptions._init());
@@ -73,7 +74,7 @@ export class TrickListOptions {
                 tricksNameChecked: JSON.stringify(TrickListOptions._trickPreferences),
             },
             extTricks: {
-                tricksFromUrl: JSON.stringify(TrickListOptions._tricksFromUrl),
+                tricksFromUrl: JSON.stringify(TrickListOptions._externalTricks),
                 urlList: JSON.stringify(TrickListOptions._urlList),
             },
         } as ChromeStorageType, () => {
@@ -107,16 +108,20 @@ export class TrickListOptions {
 
                     TrickListOptions._urlList.forEach((url) => {
                         if (!document.getElementById(url)) {
-                            TrickListOptions._addURL(url);
+                            TrickListOptions._addNewTrickInDomList(url);
                         }
                     });
                 }
 
                 // Set trick from url
                 if (items.extTricks !== undefined && items.extTricks.tricksFromUrl !== undefined) {
-                    const tricksFromURL: Trick[] = JSON.parse(items.extTricks.tricksFromUrl);
+                    const externalTricks: ExternalTricks = JSON.parse(items.extTricks.tricksFromUrl);
 
-                    await TrickListOptions._fusionTricks(tricksFromURL);
+                    await Promise.all(
+                        Object.keys(externalTricks).map(async (name: string) => {
+                            await TrickListOptions._fusionTricks(externalTricks[name], name);
+                        }),
+                    );
                 }
 
                 // Set categories from api storage
@@ -187,49 +192,52 @@ export class TrickListOptions {
      * @description Get new trickList from XMLHtppRequest (see request.utils)
      */
     private static async _addTricksFromURL(): Promise<void> {
-        const url = (document.getElementById('url') as HTMLInputElement).value;
-        (document.getElementById('url') as HTMLInputElement).value = '';
+        const urlElement = (document.getElementById('url') as HTMLInputElement);
+        const nameElement = (document.getElementById('name-url') as HTMLInputElement);
 
-        const newTricks = await getListFromHttp(url);
-        await TrickListOptions._fusionTricks(newTricks);
+        const newTricks = await getListFromHttp(urlElement.value);
+        await TrickListOptions._fusionTricks(newTricks, nameElement.value);
 
-        if (!TrickListOptions._urlList.includes(url)) {
-            TrickListOptions._urlList.push(url);
+        if (!TrickListOptions._urlList.includes(urlElement.value)) {
+            TrickListOptions._urlList.push(urlElement.value);
         }
 
-        TrickListOptions._setDisplayExternalList(url);
+        TrickListOptions._setDisplayExternalList(nameElement.value);
+
+        urlElement.value = null;
+        nameElement.value = null;
     }
 
     /**
      * @description Set url in option page
      */
-    private static _setDisplayExternalList(url: string): void {
+    private static _setDisplayExternalList(name: string): void {
         const section = (document.getElementById('activeLists') as HTMLElement);
 
         if (section.firstChild) {
-            const elementURL = (document.getElementById(url)) as HTMLElement;
+            const elementURL = (document.getElementById(name)) as HTMLElement;
             if (!elementURL) {
                 TrickListOptions._saveURLtoStorage();
-                TrickListOptions._addURL(url);
+                TrickListOptions._addNewTrickInDomList(name);
             } else {
                 alert("L'url a déjà été ajoutée ");
             }
         } else {
             TrickListOptions._saveURLtoStorage();
-            TrickListOptions._addURL(url);
+            TrickListOptions._addNewTrickInDomList(name);
         }
     }
 
     /**
      * @description Add url on HTML options page
      */
-    private static _addURL(url: string): void {
+    private static _addNewTrickInDomList(name: string): void {
         const section = (document.getElementById('activeLists') as HTMLElement);
         const li = document.createElement('li');
-        li.innerHTML = url;
-        li.id = url;
+        li.innerHTML = name;
+        li.id = name;
         section.appendChild(li);
-        TrickListOptions._removeURL(url);
+        TrickListOptions._removeURL(name);
     }
 
     /**
@@ -267,7 +275,7 @@ export class TrickListOptions {
     /**
      * @description Add new Tricks from url | file to categories
      */
-    private static async _fusionTricks(newTricks: Trick[]): Promise<void> {
+    private static async _fusionTricks(newTricks: Trick[], name: string): Promise<void> {
         const extTricks: Trick[] = [];
 
         await Promise.all(
@@ -288,7 +296,8 @@ export class TrickListOptions {
             ),
         );
 
-        TrickListOptions._tricksFromUrl = extTricks;
+        TrickListOptions._externalTricks[name] = extTricks;
+
         TrickListOptions._displayCategories();
     }
 
@@ -300,7 +309,7 @@ export class TrickListOptions {
 
         TrickListOptions._trickPreferences = [];
         TrickListOptions._urlList = [];
-        TrickListOptions._tricksFromUrl = [];
+        TrickListOptions._externalTricks = {};
 
         TrickList.forEach(() => {
             TrickList.pop();
@@ -318,7 +327,7 @@ export class TrickListOptions {
                 detailIsActivated: false,
             },
             extTricks: {
-                tricksFromUrl: JSON.stringify(TrickListOptions._tricksFromUrl),
+                tricksFromUrl: JSON.stringify(TrickListOptions._externalTricks),
                 urlList: JSON.stringify(TrickListOptions._urlList),
             },
         } as ChromeStorageType);

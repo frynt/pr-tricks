@@ -1,6 +1,29 @@
+.job-rules {
+    display: flex;
+    flex-direction: column;
+
+    .form {
+        display: flex;
+        margin-bottom: 20px;
+        align-items: center;
+
+        .form-name,
+        .form-url {
+            display: flex;
+            text-align: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .url-submit {
+            margin-top: 0px;
+            margin-left: 10px;
+        }
+    }
+}
+
 body {
     margin-right: 50%;
-    width:  max-content;
+    width: max-content;
     height: min-content;
 }
 
@@ -12,19 +35,12 @@ label {
     font-size: medium;
 }
 
-button {
-	margin: 0;
-	padding: 2% 3% 2% 3%;
-	text-align: center;
-	font-size: large;
-}
-
 #submit {
-	text-align: center;
+    text-align: center;
 }
 
 #categories {
-	display: none;
+    display: none;
 }
 
 #trickList {

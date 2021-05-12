@@ -1,3 +1,24 @@
+.job-rules {
+  display: flex;
+  flex-direction: column;
+}
+.job-rules .form {
+  display: flex;
+  margin-bottom: 20px;
+  align-items: center;
+}
+.job-rules .form .form-name,
+.job-rules .form .form-url {
+  display: flex;
+  text-align: center;
+  align-items: center;
+  flex-direction: column;
+}
+.job-rules .form .url-submit {
+  margin-top: 0px;
+  margin-left: 10px;
+}
+
 body {
   margin-right: 50%;
   width: max-content;
@@ -10,13 +31,6 @@ h1 {
 
 label {
   font-size: medium;
-}
-
-button {
-  margin: 0;
-  padding: 2% 3% 2% 3%;
-  text-align: center;
-  font-size: large;
 }
 
 #submit {
