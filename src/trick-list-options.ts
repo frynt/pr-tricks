@@ -14,9 +14,10 @@ import { getListFromHttp } from './utils/request.utils';
  * @description TrickListOptions class set trick list options
  */
 export class TrickListOptions {
-    private static _categories: string[] = [];
+    private static _defaultTrickNames: string[] = [];
     private static _trickPreferences: string[] = [];
     private static _urlList: string[] = [];
+    private static _urlNames: string[] = [];
     private static _externalTricks: ExternalTricks = {};
 
     constructor() {
@@ -42,8 +43,8 @@ export class TrickListOptions {
      */
     private static _setCategories(): void {
         TrickList.map((element: Trick) => {
-            if (!TrickListOptions._categories.includes(element.name)) {
-                TrickListOptions._categories.push(element.name);
+            if (!TrickListOptions._defaultTrickNames.includes(element.name)) {
+                TrickListOptions._defaultTrickNames.push(element.name);
             }
         });
     }
@@ -56,7 +57,7 @@ export class TrickListOptions {
         const formationCheck = (document.getElementById('formation') as HTMLInputElement).checked;
         const detailsCheck = (document.getElementById('details') as HTMLInputElement).checked;
 
-        TrickListOptions._categories.map((element: string) => {
+        TrickListOptions._defaultTrickNames.map((element: string) => {
             const checkbox = (document.getElementById(element) as HTMLInputElement);
 
             if (checkbox.checked) {
@@ -103,12 +104,14 @@ export class TrickListOptions {
                 (document.getElementById('details') as HTMLInputElement).checked = items.formation.detailIsActivated;
 
                 // Set url's list from api storage
-                if (items.extTricks !== undefined && items.extTricks.urlList !== undefined) {
+                if (items.extTricks !== undefined && items.extTricks.urlList !== undefined && items.extTricks.urlNames !== undefined) {
                     TrickListOptions._urlList = JSON.parse(items.extTricks.urlList);
+                    TrickListOptions._urlNames = JSON.parse(items.extTricks.urlNames);
 
-                    TrickListOptions._urlList.forEach((url) => {
-                        if (!document.getElementById(url)) {
-                            TrickListOptions._addNewTrickInDomList(url);
+                    TrickListOptions._urlNames.forEach((name) => {
+                        if (!document.getElementById(name)) {
+                            const url = TrickListOptions._urlList[name];
+                            TrickListOptions._addNewTrickInDomList(name, url);
                         }
                     });
                 }
@@ -128,7 +131,7 @@ export class TrickListOptions {
                 if (items.formation.tricksNameChecked.length !== 0) {
                     const tricksNameChecked: string[] = JSON.parse(items.formation.tricksNameChecked);
 
-                    TrickListOptions._categories.forEach((element: string) => {
+                    TrickListOptions._defaultTrickNames.forEach((element: string) => {
                         if (tricksNameChecked.includes(element)) {
                             (document.getElementById(element) as HTMLInputElement).checked = true;
                         } else {
@@ -152,7 +155,7 @@ export class TrickListOptions {
             section.removeChild(section.firstChild);
         }
 
-        TrickListOptions._categories.forEach((element) => {
+        TrickListOptions._defaultTrickNames.forEach((element) => {
             TrickListOptions._addCategories(element);
         });
     }
@@ -201,8 +204,11 @@ export class TrickListOptions {
         if (!TrickListOptions._urlList.includes(urlElement.value)) {
             TrickListOptions._urlList.push(urlElement.value);
         }
+        if (!TrickListOptions._urlNames.includes(urlElement.value)) {
+            TrickListOptions._urlNames.push(nameElement.value);
+        }
 
-        TrickListOptions._setDisplayExternalList(nameElement.value);
+        TrickListOptions._setDisplayExternalList(nameElement.value, urlElement.value);
 
         urlElement.value = null;
         nameElement.value = null;
@@ -211,33 +217,34 @@ export class TrickListOptions {
     /**
      * @description Set url in option page
      */
-    private static _setDisplayExternalList(name: string): void {
+    private static _setDisplayExternalList(name: string, url: string): void {
         const section = (document.getElementById('activeLists') as HTMLElement);
 
         if (section.firstChild) {
             const elementURL = (document.getElementById(name)) as HTMLElement;
             if (!elementURL) {
                 TrickListOptions._saveURLtoStorage();
-                TrickListOptions._addNewTrickInDomList(name);
+                TrickListOptions._addNewTrickInDomList(name, url);
             } else {
                 alert("L'url a déjà été ajoutée ");
             }
         } else {
             TrickListOptions._saveURLtoStorage();
-            TrickListOptions._addNewTrickInDomList(name);
+            TrickListOptions._addNewTrickInDomList(name, url);
         }
     }
 
     /**
      * @description Add url on HTML options page
      */
-    private static _addNewTrickInDomList(name: string): void {
+    private static _addNewTrickInDomList(name: string, url: string): void {
         const section = (document.getElementById('activeLists') as HTMLElement);
         const li = document.createElement('li');
         li.innerHTML = name;
         li.id = name;
         section.appendChild(li);
-        TrickListOptions._removeURL(name);
+        TrickListOptions._urlList.push(url);
+        TrickListOptions._removeURL(name, url);
     }
 
     /**
@@ -247,6 +254,7 @@ export class TrickListOptions {
         chrome.storage.sync.set({
             extTricks: {
                 urlList: JSON.stringify(TrickListOptions._urlList),
+                urlNames: JSON.stringify(TrickListOptions._urlNames),
             },
         } as ChromeStorageType);
     }
@@ -254,15 +262,17 @@ export class TrickListOptions {
     /**
      * @description Add a remove button for each url added
      */
-    private static _removeURL(url: string): void {
-        const li = (document.getElementById(url) as HTMLElement);
+    private static _removeURL(name: string, url: string): void {
+        const li = (document.getElementById(name) as HTMLElement);
 
         const btn = document.createElement('input');
         btn.setAttribute('type', 'button');
         btn.value = 'X';
         btn.addEventListener('click', () => {
-            const indexToRemove = TrickListOptions._urlList.indexOf(url);
-            TrickListOptions._urlList.splice(indexToRemove);
+            const nameIndex = TrickListOptions._urlNames.indexOf(name);
+            const urlIndex = TrickListOptions._urlList.indexOf(url);
+            TrickListOptions._urlNames.splice(nameIndex);
+            TrickListOptions._urlList.splice(urlIndex);
             TrickListOptions._saveURLtoStorage();
 
             li.parentNode.removeChild(li);
@@ -288,8 +298,8 @@ export class TrickListOptions {
                         // Push in url tricks list for set in chrome storage
                         extTricks.push(extTrick);
                         // Add categories
-                        if (!TrickListOptions._categories.includes(extTrick.name)) {
-                            TrickListOptions._categories.push(extTrick.name);
+                        if (!TrickListOptions._defaultTrickNames.includes(extTrick.name)) {
+                            TrickListOptions._defaultTrickNames.push(extTrick.name);
                         }
                     }
                 },

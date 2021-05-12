@@ -10,5 +10,6 @@ export type ChromeStorageType = {
     extTricks: {
         tricksFromUrl: string;
         urlList: string;
+        urlNames: string;
     };
 };
