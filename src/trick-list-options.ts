@@ -155,16 +155,29 @@ export class TrickListOptions {
             section.removeChild(section.firstChild);
         }
 
+        const defaultSection = document.createElement('section');
+        const defaultTitle = document.createElement('h3');
+        defaultTitle.innerText = 'Default TrickList';
+        defaultSection.appendChild(defaultTitle);
+        section.appendChild(defaultSection);
+
         TrickListOptions._defaultTrickNames.forEach((element) => {
-            TrickListOptions._addCategories(element);
+            TrickListOptions._addCategories(element, defaultSection);
         });
+
+        TrickListOptions._displayExtCategories();
+    }
+
+    /**
+     * @description Display external categories from other tricks
+     */
+    private static _displayExtCategories(): void {
     }
 
     /**
      * @description Add HTML input and label foreach valide trick categories
      */
-    private static _addCategories(element: string): void {
-        const section = (document.getElementById('categories') as HTMLInputElement);
+    private static _addCategories(element: string, section: HTMLElement): void {
         const input = document.createElement('input');
         const label = document.createElement('label');
 
