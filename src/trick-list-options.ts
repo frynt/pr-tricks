@@ -15,6 +15,7 @@ import { getListFromHttp } from './utils/request.utils';
  */
 export class TrickListOptions {
     private static _defaultTrickNames: string[] = [];
+    private static _extTrickNames: string[] = [];
     private static _trickPreferences: string[] = [];
     private static _urlList: string[] = [];
     private static _urlNames: string[] = [];
@@ -65,6 +66,14 @@ export class TrickListOptions {
             }
         });
 
+        TrickListOptions._extTrickNames.map((element) => {
+            const checkbox = (document.getElementById(element) as HTMLInputElement);
+
+            if (checkbox.checked) {
+                TrickListOptions._trickPreferences.push(element);
+            }
+        });
+
         chrome.storage.sync.set({
             config: {
                 favoriteColor: color,
@@ -96,6 +105,10 @@ export class TrickListOptions {
      *              stored in chrome.storage.
      */
     private static _restoreOptions(): void {
+        // Clear dom elements to set properly with chome api
+        TrickListOptions._setCategories();
+
+        // Get api preferences from chrome storage et restore user options
         chrome.storage.sync.get(
             async (items: ChromeStorageType) => {
                 (document.getElementById('color') as HTMLInputElement).value = items.config.favoriteColor;
@@ -127,7 +140,22 @@ export class TrickListOptions {
                     );
                 }
 
-                // Set categories from api storage
+                // Set external tricks from api storage
+                if (items.extTricks.tricksNameChecked !== undefined) {
+                    if (items.extTricks.tricksNameChecked.length !== 0) {
+                        const tricksNameChecked: string[] = JSON.parse(items.extTricks.tricksNameChecked);
+
+                        TrickListOptions._extTrickNames.forEach((element: string) => {
+                            if (tricksNameChecked.includes(element)) {
+                                (document.getElementById(element) as HTMLInputElement).checked = true;
+                            } else {
+                                (document.getElementById(element) as HTMLInputElement).checked = false;
+                            }
+                        });
+                    }
+                }
+
+                // Set default tricks from api storage
                 if (items.formation.tricksNameChecked.length !== 0) {
                     const tricksNameChecked: string[] = JSON.parse(items.formation.tricksNameChecked);
 
@@ -137,10 +165,10 @@ export class TrickListOptions {
                         } else {
                             (document.getElementById(element) as HTMLInputElement).checked = false;
                         }
-
-                        TrickListOptions._showFormationMode();
                     });
                 }
+
+                TrickListOptions._showFormationMode();
             },
         );
     }
@@ -157,7 +185,9 @@ export class TrickListOptions {
 
         const defaultSection = document.createElement('section');
         const defaultTitle = document.createElement('h3');
+
         defaultTitle.innerText = 'Default TrickList';
+
         defaultSection.appendChild(defaultTitle);
         section.appendChild(defaultSection);
 
@@ -165,13 +195,35 @@ export class TrickListOptions {
             TrickListOptions._addCategories(element, defaultSection);
         });
 
-        TrickListOptions._displayExtCategories();
+        chrome.storage.sync.get(async (items: ChromeStorageType) => {
+            if (items.extTricks.tricksFromUrl !== undefined && items.extTricks.tricksNameChecked !== undefined) {
+                TrickListOptions._externalTricks = JSON.parse(items.extTricks.tricksFromUrl);
+                TrickListOptions._extTrickNames = JSON.parse(items.extTricks.tricksNameChecked);
+
+                Object.keys(TrickListOptions._externalTricks).map(async (name: string) => {
+                    const project = name;
+                    const tricks = TrickListOptions._externalTricks[name];
+                    TrickListOptions._displayExtCategories(project, tricks);
+                });
+            }
+        });
     }
 
     /**
      * @description Display external categories from other tricks
      */
-    private static _displayExtCategories(): void {
+    private static _displayExtCategories(project: string, tricks: Trick[]): void {
+        const categories = (document.getElementById('categories') as HTMLElement);
+        const newSection = document.createElement('section');
+        const h3 = document.createElement('h3');
+        h3.innerText = project;
+        categories.appendChild(newSection);
+        newSection.appendChild(h3);
+        newSection.style.paddingLeft = '10%';
+
+        tricks.forEach((element) => {
+            TrickListOptions._addCategories(element.name, newSection);
+        });
     }
 
     /**
@@ -198,7 +250,7 @@ export class TrickListOptions {
         const activated = (document.getElementById('formation') as HTMLInputElement);
 
         if (activated.checked) {
-            section.style.display = 'block';
+            section.style.display = 'flex';
         } else {
             section.style.display = 'none';
         }
@@ -217,7 +269,7 @@ export class TrickListOptions {
         if (!TrickListOptions._urlList.includes(urlElement.value)) {
             TrickListOptions._urlList.push(urlElement.value);
         }
-        if (!TrickListOptions._urlNames.includes(urlElement.value)) {
+        if (!TrickListOptions._urlNames.includes(nameElement.value)) {
             TrickListOptions._urlNames.push(nameElement.value);
         }
 
@@ -311,8 +363,8 @@ export class TrickListOptions {
                         // Push in url tricks list for set in chrome storage
                         extTricks.push(extTrick);
                         // Add categories
-                        if (!TrickListOptions._defaultTrickNames.includes(extTrick.name)) {
-                            TrickListOptions._defaultTrickNames.push(extTrick.name);
+                        if (!TrickListOptions._extTrickNames.includes(extTrick.name)) {
+                            TrickListOptions._extTrickNames.push(extTrick.name);
                         }
                     }
                 },
@@ -320,6 +372,12 @@ export class TrickListOptions {
         );
 
         TrickListOptions._externalTricks[name] = extTricks;
+        chrome.storage.sync.set({
+            extTricks: {
+                tricksFromUrl: JSON.stringify(TrickListOptions._externalTricks),
+                tricksNameChecked: JSON.stringify(TrickListOptions._extTrickNames),
+            },
+        } as ChromeStorageType);
 
         TrickListOptions._displayCategories();
     }

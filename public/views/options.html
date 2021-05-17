@@ -23,36 +23,37 @@
     <hr />
 
     <section>
-        <section class="job-rules">
+        <section>
             <!--Configuration des analyses selon le metier. Exemple: Banque, Commerce...-->
             <h2>Règles métiers</h2>
             <!-- list fill auto -->
             <ul id="activeLists"></ul>
 
             <h3>Ajouter une trickList externe :</h3>
-            <div class="form">
-                <div class="form-name">
-                    <label for="name-url">
-                        Entrez le nom de votre tricks :
-                    </label>
-                    <input
-                        type="text"
-                        id="name-url"
-                        name="url"
-                    >
-                </div>
-                <div class="form-url">
-                    <label for="url">
-                        Tapez une URL :
-                    </label>
-                    <input
-                        type="text"
-                        id="url"
-                        name="url"
-                    >
-                </div>
-                <input type="button" id="url-submit" class="url-submit" value="OK">
-            </div>
+            <label for="name-url">
+                Entrez le nom de votre tricks :
+            </label>
+            <input
+                type="text"
+                id="name-url"
+                name="url"
+            >
+            <br>
+            <label for="url">
+                Tapez une URL :
+            </label>
+            <input
+                type="text"
+                id="url"
+                name="url"
+            >
+            <input
+                type="button"
+                id="url-submit"
+                class="url-submit"
+                value="OK"
+            >
+            <br>
             <label for="local">Ajoutez un fichier : </label>
             <input
                 type="file"

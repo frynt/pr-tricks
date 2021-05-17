@@ -1,26 +1,3 @@
-.job-rules {
-    display: flex;
-    flex-direction: column;
-
-    .form {
-        display: flex;
-        margin-bottom: 20px;
-        align-items: center;
-
-        .form-name,
-        .form-url {
-            display: flex;
-            text-align: center;
-            align-items: center;
-            flex-direction: column;
-        }
-        .url-submit {
-            margin-top: 0px;
-            margin-left: 10px;
-        }
-    }
-}
-
 body {
     margin-right: 50%;
     width: max-content;
@@ -40,7 +17,8 @@ label {
 }
 
 #categories {
-    display: none;
+    display: flex;
+    flex-direction: row;
 }
 
 #trickList {
@@ -49,4 +27,9 @@ label {
 
 input {
     font-size: medium;
+}
+
+button {
+    font-size: medium;
+    padding: 2%;
 }
