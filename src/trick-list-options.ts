@@ -59,10 +59,11 @@ export class TrickListOptions {
         const detailsCheck = (document.getElementById('details') as HTMLInputElement).checked;
 
         TrickListOptions._defaultTrickList.map((element: string) => {
-            const checkbox = (document.getElementById(element) as HTMLInputElement);
+            const elementSection = `Default TrickList_${element}`;
+            const checkbox1 = (document.getElementById(elementSection) as HTMLInputElement);
 
-            if (checkbox.checked) {
-                TrickListOptions._defaultTrickNames.push(element);
+            if (checkbox1.checked) {
+                TrickListOptions._defaultTrickNames.push(elementSection);
             }
         });
 
@@ -70,10 +71,11 @@ export class TrickListOptions {
             Object.keys(TrickListOptions._externalTricks).forEach(async (project: string): Promise<void> => {
                 Object.keys(TrickListOptions._externalTricks[project]).forEach(async (name: string): Promise<void> => {
                     const trick = (TrickListOptions._externalTricks)[project][name].name;
-                    const checkbox = (document.getElementById(trick) as HTMLInputElement);
 
-                    if (checkbox.checked) {
-                        TrickListOptions._extTrickNames.push(trick);
+                    const trickID = `${project}_${trick}`;
+                    const checkbox2 = (document.getElementById(trickID) as HTMLInputElement);
+                    if (checkbox2.checked) {
+                        TrickListOptions._extTrickNames.push(trickID);
                     }
                 });
             });
@@ -125,10 +127,11 @@ export class TrickListOptions {
                     const tricksNameChecked: string[] = JSON.parse(items.formation.tricksNameChecked);
 
                     TrickListOptions._defaultTrickList.forEach((element: string) => {
-                        if (tricksNameChecked.includes(element)) {
-                            (document.getElementById(element) as HTMLInputElement).checked = true;
+                        const elementSection = `Default TrickList_${element}`;
+                        if (tricksNameChecked.includes(elementSection)) {
+                            (document.getElementById(elementSection) as HTMLInputElement).checked = true;
                         } else {
-                            (document.getElementById(element) as HTMLInputElement).checked = false;
+                            (document.getElementById(elementSection) as HTMLInputElement).checked = false;
                         }
                     });
                 }
@@ -138,12 +141,8 @@ export class TrickListOptions {
                     if (items.extTricks.tricksNameChecked.length !== 0) {
                         const tricksNameChecked: string[] = JSON.parse(items.extTricks.tricksNameChecked);
 
-                        TrickListOptions._extTrickNames.forEach((element: string) => {
-                            if (tricksNameChecked.includes(element)) {
-                                (document.getElementById(element) as HTMLInputElement).checked = true;
-                            } else {
-                                (document.getElementById(element) as HTMLInputElement).checked = false;
-                            }
+                        tricksNameChecked.forEach((element: string) => {
+                            (document.getElementById(element) as HTMLInputElement).checked = true;
                         });
                     }
                 }
@@ -251,8 +250,7 @@ export class TrickListOptions {
 
         label.innerHTML = element;
         input.setAttribute('type', 'checkbox');
-        input.id = element;
-
+        input.id = `${section.firstChild.textContent}_${element}`;
         section.appendChild(input);
         section.appendChild(label);
         section.appendChild(document.createElement('br'));
