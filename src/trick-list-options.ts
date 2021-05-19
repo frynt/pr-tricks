@@ -1,9 +1,11 @@
+/* eslint-disable no-plusplus */
 /* eslint-disable no-new */
 /* eslint-disable no-alert */
 import { TrickList } from './data/trick-list';
 import { Trick } from './interfaces/trick.interface';
 import { ChromeStorageType } from './types/chrome-storage.type';
 import { ExternalTricks } from './types/external-tricks.type';
+import { urlTricks } from './types/url-tricks.type';
 import { getListFromHttp } from './utils/request.utils';
 
 // Doc from https://developer.chrome.com/docs/extensions/mv3/options/
@@ -17,8 +19,7 @@ export class TrickListOptions {
     private static _defaultTrickList: string[] = [];
     private static _defaultTrickNames: string[] = [];
     private static _extTrickNames: string[] = [];
-    private static _urlList: string[] = [];
-    private static _urlNames: string[] = [];
+    private static _urlList: urlTricks = { name: [], url: [] };
     private static _externalTricks: ExternalTricks = {};
 
     constructor() {
@@ -94,7 +95,6 @@ export class TrickListOptions {
                 tricksFromUrl: JSON.stringify(TrickListOptions._externalTricks),
                 tricksNameChecked: JSON.stringify(TrickListOptions._extTrickNames),
                 urlList: JSON.stringify(TrickListOptions._urlList),
-                urlNames: JSON.stringify(TrickListOptions._urlNames),
             },
         } as ChromeStorageType, () => {
             // Update status to let user know options were saved.
@@ -156,16 +156,17 @@ export class TrickListOptions {
     private static _restoreExternalTricks(): void {
         chrome.storage.sync.get(async (items: ChromeStorageType) => {
             // Set url's list from api storage
-            if (items.extTricks !== undefined && items.extTricks.urlList !== undefined && items.extTricks.urlNames !== undefined) {
+            if (items.extTricks !== undefined && items.extTricks.urlList !== undefined) {
                 TrickListOptions._urlList = JSON.parse(items.extTricks.urlList);
-                TrickListOptions._urlNames = JSON.parse(items.extTricks.urlNames);
 
-                TrickListOptions._urlNames.forEach((name) => {
-                    if (!document.getElementById(name)) {
-                        const url = TrickListOptions._urlList[name];
+                for (let i = 0; i < TrickListOptions._urlList.name.length; i++) {
+                    const name = TrickListOptions._urlList.name[i];
+                    const url = TrickListOptions._urlList.url[i];
+
+                    if (!document.getElementById(`${name}_${url}`)) {
                         TrickListOptions._addNewTrickInDomList(name, url);
                     }
-                });
+                }
             }
 
             // Set trick from url
@@ -280,11 +281,11 @@ export class TrickListOptions {
         const newTricks = await getListFromHttp(urlElement.value);
         await TrickListOptions._fusionTricks(newTricks, nameElement.value);
 
-        if (!TrickListOptions._urlList.includes(urlElement.value)) {
-            TrickListOptions._urlList.push(urlElement.value);
+        if (!TrickListOptions._urlList.url.includes(urlElement.value)) {
+            TrickListOptions._urlList.url.push(urlElement.value);
         }
-        if (!TrickListOptions._urlNames.includes(nameElement.value)) {
-            TrickListOptions._urlNames.push(nameElement.value);
+        if (!TrickListOptions._urlList.name.includes(nameElement.value)) {
+            TrickListOptions._urlList.name.push(nameElement.value);
         }
 
         TrickListOptions._setDisplayExternalList(nameElement.value, urlElement.value);
@@ -320,9 +321,10 @@ export class TrickListOptions {
         const section = (document.getElementById('activeLists') as HTMLElement);
         const li = document.createElement('li');
         li.innerHTML = name;
-        li.id = name;
+        li.id = `${name}_${url}`;
         section.appendChild(li);
-        TrickListOptions._urlList.push(url);
+        TrickListOptions._urlList.name.push(name);
+        TrickListOptions._urlList.url.push(url);
         TrickListOptions._removeURL(name, url);
     }
 
@@ -333,7 +335,6 @@ export class TrickListOptions {
         chrome.storage.sync.set({
             extTricks: {
                 urlList: JSON.stringify(TrickListOptions._urlList),
-                urlNames: JSON.stringify(TrickListOptions._urlNames),
             },
         } as ChromeStorageType);
     }
@@ -342,16 +343,16 @@ export class TrickListOptions {
      * @description Add a remove button for each url added
      */
     private static _removeURL(name: string, url: string): void {
-        const li = (document.getElementById(name) as HTMLElement);
+        const li = (document.getElementById(`${name}_${url}`) as HTMLElement);
 
         const btn = document.createElement('input');
         btn.setAttribute('type', 'button');
         btn.value = 'X';
         btn.addEventListener('click', () => {
-            const nameIndex = TrickListOptions._urlNames.indexOf(name);
-            const urlIndex = TrickListOptions._urlList.indexOf(url);
-            TrickListOptions._urlNames.splice(nameIndex);
-            TrickListOptions._urlList.splice(urlIndex);
+            const nameIndex = TrickListOptions._urlList.name.indexOf(name);
+            const urlIndex = TrickListOptions._urlList.url.indexOf(url);
+            TrickListOptions._urlList.name.splice(nameIndex);
+            TrickListOptions._urlList.url.splice(urlIndex);
             TrickListOptions._saveURLtoStorage();
 
             li.parentNode.removeChild(li);
@@ -400,9 +401,12 @@ export class TrickListOptions {
 
         TrickListOptions._defaultTrickNames = [];
         TrickListOptions._extTrickNames = [];
-        TrickListOptions._urlList = [];
-        TrickListOptions._urlNames = [];
+        TrickListOptions._urlList = undefined;
         TrickListOptions._externalTricks = {};
+
+        while (TrickList.length > 8) {
+            TrickList.pop();
+        }
 
         const defaultColor = '#B9C1DF';
 
@@ -419,7 +423,6 @@ export class TrickListOptions {
                 tricksFromUrl: JSON.stringify(TrickListOptions._externalTricks),
                 tricksNameChecked: JSON.stringify(TrickListOptions._extTrickNames),
                 urlList: JSON.stringify(TrickListOptions._urlList),
-                urlNames: JSON.stringify(TrickListOptions._urlNames),
             },
         } as ChromeStorageType);
 

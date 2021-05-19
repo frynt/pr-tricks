@@ -11,6 +11,5 @@ export type ChromeStorageType = {
         tricksFromUrl: string;
         tricksNameChecked: string;
         urlList: string;
-        urlNames: string;
     };
 };
