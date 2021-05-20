@@ -55,7 +55,7 @@ export class TrickListOptions {
     /**
      * @description Saves options to chrome.storage
      */
-    private static _saveOptions(): void {
+    private static async _saveOptions(): Promise<void> {
         const color = (document.getElementById('color') as HTMLInputElement).value;
         const formationCheck = (document.getElementById('formation') as HTMLInputElement).checked;
         const detailsCheck = (document.getElementById('details') as HTMLInputElement).checked;
@@ -70,20 +70,22 @@ export class TrickListOptions {
         });
 
         if (TrickListOptions._externalTricks !== undefined) {
-            Object.keys(TrickListOptions._externalTricks).forEach(async (project: string): Promise<void> => {
-                Object.keys(TrickListOptions._externalTricks[project]).forEach(async (name: string): Promise<void> => {
-                    const trick = (TrickListOptions._externalTricks)[project][name].name;
+            await Promise.all(
+                Object.keys(TrickListOptions._externalTricks).map((project: string): void => {
+                    Object.keys(TrickListOptions._externalTricks[project]).forEach((name: string): void => {
+                        const trick = (TrickListOptions._externalTricks)[project][name].name;
 
-                    const trickID = `${project}_${trick}`;
-                    const checkbox2 = (document.getElementById(trickID) as HTMLInputElement);
-                    if (checkbox2.checked) {
-                        TrickListOptions._extTrickNames.push(trickID);
-                    }
-                });
-            });
+                        const trickID = `${project}_${trick}`;
+                        const checkbox2 = (document.getElementById(trickID) as HTMLInputElement);
+                        if (checkbox2.checked) {
+                            TrickListOptions._extTrickNames.push(trickID);
+                        }
+                    });
+                }),
+            );
         }
 
-        chrome.storage.sync.set({
+        const items = {
             config: {
                 favoriteColor: color,
             },
@@ -96,8 +98,10 @@ export class TrickListOptions {
                 tricksFromUrl: JSON.stringify(TrickListOptions._externalTricks),
                 tricksNameChecked: JSON.stringify(TrickListOptions._extTrickNames),
                 urlList: JSON.stringify(TrickListOptions._urlList),
-            },
-        } as ChromeStorageType, () => {
+            } };
+
+        console.log('Save');
+        chrome.storage.sync.set(items as ChromeStorageType, () => {
             // Update status to let user know options were saved.
             const status = document.getElementById('status');
             status.textContent = 'Options saved.';
@@ -143,6 +147,7 @@ export class TrickListOptions {
                         tricksNameChecked.forEach((element: string) => {
                             (document.getElementById(element) as HTMLInputElement).checked = true;
                         });
+                        TrickListOptions._extTrickNames = tricksNameChecked;
                     }
                 }
 
@@ -275,6 +280,8 @@ export class TrickListOptions {
 
         const newTricks = await getListFromHttp(urlElement.value);
         await TrickListOptions._fusionTricks(newTricks, nameElement.value);
+        TrickListOptions._saveOptions();
+        TrickListOptions._restoreOptions();
 
         if (!TrickListOptions._urlList.url.includes(urlElement.value)) {
             TrickListOptions._urlList.url.push(urlElement.value);
@@ -298,19 +305,17 @@ export class TrickListOptions {
         if (section.firstChild) {
             const elementURL = (document.getElementById(`${name}_${url}`)) as HTMLElement;
             if (!elementURL) {
-                TrickListOptions._saveURLtoStorage();
                 TrickListOptions._addNewTrickInDomList(name, url);
             } else {
                 alert("L'url a déjà été ajoutée ");
             }
         } else {
-            TrickListOptions._saveURLtoStorage();
             TrickListOptions._addNewTrickInDomList(name, url);
         }
     }
 
     /**
-     * @description Add url on HTML options page
+     * @description Add url on HTML options pagec
      */
     private static _addNewTrickInDomList(name: string, url: string): void {
         const activeList = (document.getElementById('activeLists') as HTMLElement);
@@ -325,17 +330,6 @@ export class TrickListOptions {
     }
 
     /**
-     * @description Update _urlList with new url in chrome storage
-     */
-    private static _saveURLtoStorage(): void {
-        chrome.storage.sync.set({
-            extTricks: {
-                urlList: JSON.stringify(TrickListOptions._urlList),
-            },
-        } as ChromeStorageType);
-    }
-
-    /**
      * @description Add a remove button for each url added
      */
     private static _removeURL(name: string, url: string, sectionID: string): void {
@@ -347,7 +341,6 @@ export class TrickListOptions {
         btn.addEventListener('click', () => {
             TrickListOptions._urlList.name.splice(TrickListOptions._urlList.name.indexOf(name));
             TrickListOptions._urlList.url.splice(TrickListOptions._urlList.url.indexOf(url));
-            TrickListOptions._saveURLtoStorage();
             TrickListOptions._removeTrickList(sectionID);
 
             li.parentNode.removeChild(li);
@@ -378,14 +371,8 @@ export class TrickListOptions {
         );
 
         TrickListOptions._externalTricks[name] = extTricks;
-        chrome.storage.sync.set({
-            extTricks: {
-                tricksFromUrl: JSON.stringify(TrickListOptions._externalTricks),
-            },
-        } as ChromeStorageType);
 
         await TrickListOptions._displayCategories();
-        TrickListOptions._restoreOptions();
     }
 
     /**
@@ -430,7 +417,8 @@ export class TrickListOptions {
                 TrickListOptions._extTrickNames.splice(TrickListOptions._extTrickNames.indexOf(trick.name));
             }
         });
-        TrickListOptions._externalTricks[section] = [];
+
+        delete TrickListOptions._externalTricks[section];
 
         (document.getElementById(section) as HTMLElement).parentNode.removeChild(document.getElementById(section));
 
