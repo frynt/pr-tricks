@@ -100,7 +100,6 @@ export class TrickListOptions {
                 urlList: JSON.stringify(TrickListOptions._urlList),
             } };
 
-        console.log('Save');
         chrome.storage.sync.set(items as ChromeStorageType, () => {
             // Update status to let user know options were saved.
             const status = document.getElementById('status');
@@ -413,8 +412,9 @@ export class TrickListOptions {
 
     private static _removeTrickList(section: string): void {
         TrickListOptions._externalTricks[section].forEach((trick) => {
-            if (TrickListOptions._extTrickNames.includes(trick.name)) {
-                TrickListOptions._extTrickNames.splice(TrickListOptions._extTrickNames.indexOf(trick.name));
+            const project = `${section}_${trick.name}`;
+            if (TrickListOptions._extTrickNames.includes(project)) {
+                TrickListOptions._extTrickNames.splice(TrickListOptions._extTrickNames.indexOf(project), 1);
             }
         });
 
@@ -422,12 +422,7 @@ export class TrickListOptions {
 
         (document.getElementById(section) as HTMLElement).parentNode.removeChild(document.getElementById(section));
 
-        chrome.storage.sync.set({
-            extTricks: {
-                tricksFromUrl: JSON.stringify(TrickListOptions._externalTricks),
-                tricksNameChecked: JSON.stringify(TrickListOptions._extTrickNames),
-            },
-        } as ChromeStorageType);
+        TrickListOptions._saveOptions();
     }
 }
 
