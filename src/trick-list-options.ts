@@ -319,10 +319,17 @@ export class TrickListOptions {
     private static _addNewTrickInDomList(name: string, url: string): void {
         const activeList = (document.getElementById('activeLists') as HTMLElement);
         const sectionID = (document.getElementById(name) as HTMLElement).id;
-        const li = document.createElement('li');
-        li.innerHTML = name;
-        li.id = `${name}_${url}`;
-        activeList.appendChild(li);
+
+        const input = document.createElement('input');
+        const label = document.createElement('label');
+
+        label.innerHTML = name;
+        label.id = `${name}_${url}`;
+        input.setAttribute('type', 'checkbox');
+        input.id = `${name}-${url}`;
+        activeList.appendChild(input);
+        activeList.appendChild(label);
+
         TrickListOptions._urlList.name.push(name);
         TrickListOptions._urlList.url.push(url);
         TrickListOptions._removeURL(name, url, sectionID);
@@ -332,9 +339,11 @@ export class TrickListOptions {
      * @description Add a remove button for each url added
      */
     private static _removeURL(name: string, url: string, sectionID: string): void {
-        const li = (document.getElementById(`${name}_${url}`) as HTMLElement);
+        const section = (document.getElementById('activeLists') as HTMLElement);
+        const input = (document.getElementById(`${name}_${url}`) as HTMLElement);
+        const label = (document.getElementById(`${name}-${url}`) as HTMLElement);
+        const btn = (document.createElement('input'));
 
-        const btn = document.createElement('input');
         btn.setAttribute('type', 'button');
         btn.value = 'X';
         btn.addEventListener('click', () => {
@@ -342,11 +351,13 @@ export class TrickListOptions {
             TrickListOptions._urlList.url.splice(TrickListOptions._urlList.url.indexOf(url));
             TrickListOptions._removeTrickList(sectionID);
 
-            li.parentNode.removeChild(li);
+            input.parentNode.removeChild(input);
+            label.parentNode.removeChild(label);
             btn.parentNode.removeChild(btn);
         });
 
-        li.appendChild(btn);
+        section.appendChild(btn);
+        section.appendChild(document.createElement('br'));
     }
 
     /**
