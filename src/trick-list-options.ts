@@ -19,8 +19,8 @@ export class TrickListOptions {
     private static _defaultTrickList: string[] = [];
     private static _defaultTrickNames: string[] = [];
     private static _extTrickNames: string[] = [];
-    private static _urlList: urlTricks = { name: [], url: [] };
     private static _externalTricks: ExternalTricks = {};
+    private static _urlList: urlTricks = { name: [], url: [], isActivated: [] };
 
     constructor() {
         document.addEventListener('DOMContentLoaded', () => TrickListOptions._init());
@@ -81,6 +81,16 @@ export class TrickListOptions {
                             TrickListOptions._extTrickNames.push(trickID);
                         }
                     });
+                }),
+            );
+        }
+
+        if (TrickListOptions._urlList !== undefined) {
+            await Promise.all(
+                TrickListOptions._urlList.url.map((url: string) => {
+                    const checkState = (document.getElementById(url) as HTMLInputElement).checked;
+                    TrickListOptions._urlList.isActivated.push(checkState);
+                    console.log(TrickListOptions._urlList);
                 }),
             );
         }
@@ -174,12 +184,13 @@ export class TrickListOptions {
             if (items.extTricks !== undefined && items.extTricks.urlList !== undefined) {
                 TrickListOptions._urlList = JSON.parse(items.extTricks.urlList);
 
-                for (let i = 0; i < TrickListOptions._urlList.name.length; i++) {
+                for (let i = 0; i < TrickListOptions._urlList.url.length; i++) {
                     const name = TrickListOptions._urlList.name[i];
                     const url = TrickListOptions._urlList.url[i];
+                    const isActivated = TrickListOptions._urlList.isActivated[i];
 
                     if (!document.getElementById(`${name}_${url}`)) {
-                        TrickListOptions._addNewTrickInDomList(name, url);
+                        TrickListOptions._addNewTrickInDomList(name, url, isActivated);
                     }
                 }
             }
@@ -304,19 +315,19 @@ export class TrickListOptions {
         if (section.firstChild) {
             const elementURL = (document.getElementById(`${name}_${url}`)) as HTMLElement;
             if (!elementURL) {
-                TrickListOptions._addNewTrickInDomList(name, url);
+                TrickListOptions._addNewTrickInDomList(name, url, true);
             } else {
                 alert("L'url a déjà été ajoutée ");
             }
         } else {
-            TrickListOptions._addNewTrickInDomList(name, url);
+            TrickListOptions._addNewTrickInDomList(name, url, true);
         }
     }
 
     /**
      * @description Add url on HTML options pagec
      */
-    private static _addNewTrickInDomList(name: string, url: string): void {
+    private static _addNewTrickInDomList(name: string, url: string, isActivated: boolean): void {
         const activeList = (document.getElementById('activeLists') as HTMLElement);
         const sectionID = (document.getElementById(name) as HTMLElement).id;
 
@@ -326,12 +337,11 @@ export class TrickListOptions {
         label.innerHTML = name;
         label.id = `${name}_${url}`;
         input.setAttribute('type', 'checkbox');
-        input.id = `${name}-${url}`;
+        input.id = url;
+        input.checked = isActivated;
         activeList.appendChild(input);
         activeList.appendChild(label);
 
-        TrickListOptions._urlList.name.push(name);
-        TrickListOptions._urlList.url.push(url);
         TrickListOptions._removeURL(name, url, sectionID);
     }
 
@@ -340,8 +350,8 @@ export class TrickListOptions {
      */
     private static _removeURL(name: string, url: string, sectionID: string): void {
         const section = (document.getElementById('activeLists') as HTMLElement);
-        const input = (document.getElementById(`${name}_${url}`) as HTMLElement);
-        const label = (document.getElementById(`${name}-${url}`) as HTMLElement);
+        const input = (document.getElementById(url) as HTMLElement);
+        const label = (document.getElementById(`${name}_${url}`) as HTMLElement);
         const btn = (document.createElement('input'));
 
         btn.setAttribute('type', 'button');
@@ -393,7 +403,7 @@ export class TrickListOptions {
 
         TrickListOptions._defaultTrickNames = [];
         TrickListOptions._extTrickNames = [];
-        TrickListOptions._urlList = { name: [], url: [] };
+        TrickListOptions._urlList = { name: [], url: [], isActivated: [] };
         TrickListOptions._externalTricks = {};
 
         while (TrickList.length > 8) {
