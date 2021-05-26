@@ -1,3 +1,4 @@
+/* eslint-disable no-loop-func */
 /* eslint-disable no-plusplus */
 /* eslint-disable no-new */
 /* eslint-disable no-alert */
@@ -31,8 +32,8 @@ export class TrickListOptions {
      */
     private static _init(): void {
         TrickListOptions._setCategories();
-        TrickListOptions._restoreExternalTricks();
         TrickListOptions._displayCategories();
+        TrickListOptions._restoreExternalTricks();
         TrickListOptions._restoreOptions();
 
         document.getElementById('formation').addEventListener('change', () => TrickListOptions._showFormationMode());
@@ -89,8 +90,8 @@ export class TrickListOptions {
             await Promise.all(
                 TrickListOptions._urlList.url.map((url: string) => {
                     const checkState = (document.getElementById(url) as HTMLInputElement).checked;
-                    TrickListOptions._urlList.isActivated.push(checkState);
-                    console.log(TrickListOptions._urlList);
+                    const index = TrickListOptions._urlList.url.indexOf(url);
+                    TrickListOptions._urlList.isActivated[index] = checkState;
                 }),
             );
         }
@@ -189,8 +190,11 @@ export class TrickListOptions {
                     const url = TrickListOptions._urlList.url[i];
                     const isActivated = TrickListOptions._urlList.isActivated[i];
 
-                    if (!document.getElementById(`${name}_${url}`)) {
+                    if (!document.getElementById(url)) {
                         TrickListOptions._addNewTrickInDomList(name, url, isActivated);
+                        TrickListOptions._showProjectSetion(name, url);
+                    } else {
+                        window.alert("L'url a déjà été ajouté");
                     }
                 }
             }
@@ -240,9 +244,11 @@ export class TrickListOptions {
         const categories = (document.getElementById('categories') as HTMLElement);
         const newSection = document.createElement('section');
         const h3 = document.createElement('h3');
+
         newSection.id = project;
         h3.innerText = project;
         h3.id = project;
+
         categories.appendChild(newSection);
         newSection.appendChild(h3);
         newSection.style.paddingLeft = '10%';
@@ -271,11 +277,23 @@ export class TrickListOptions {
      * @description Show categories section if the formation mode is activated
      */
     private static _showFormationMode(): void {
-        const section = (document.getElementById('categories') as HTMLInputElement);
+        const section = (document.getElementById('categories') as HTMLElement);
         const activated = (document.getElementById('formation') as HTMLInputElement);
 
         if (activated.checked) {
             section.style.display = 'flex';
+        } else {
+            section.style.display = 'none';
+        }
+    }
+
+    private static _showProjectSetion(name: string, url: string): void {
+        const section = (document.getElementById(name) as HTMLElement);
+        const index = TrickListOptions._urlList.url.indexOf(url);
+        const projectIsActivated = TrickListOptions._urlList.isActivated[index];
+
+        if (projectIsActivated) {
+            section.style.display = 'block';
         } else {
             section.style.display = 'none';
         }
@@ -392,7 +410,7 @@ export class TrickListOptions {
 
         TrickListOptions._externalTricks[name] = extTricks;
 
-        await TrickListOptions._displayCategories();
+        await TrickListOptions._displayExtCategories(name, extTricks);
     }
 
     /**
