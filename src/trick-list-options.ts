@@ -79,7 +79,9 @@ export class TrickListOptions {
                         const trickID = `${project}_${trick}`;
                         const checkbox2 = (document.getElementById(trickID) as HTMLInputElement);
                         if (checkbox2.checked) {
-                            TrickListOptions._extTrickNames.push(trickID);
+                            if (!TrickListOptions._extTrickNames.includes(trickID)) {
+                                TrickListOptions._extTrickNames.push(trickID);
+                            }
                         }
                     });
                 }),
@@ -157,7 +159,6 @@ export class TrickListOptions {
                         tricksNameChecked.forEach((element: string) => {
                             (document.getElementById(element) as HTMLInputElement).checked = true;
                         });
-                        TrickListOptions._extTrickNames = tricksNameChecked;
                     }
                 }
 
