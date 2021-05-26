@@ -306,19 +306,27 @@ export class TrickListOptions {
         const urlElement = (document.getElementById('url') as HTMLInputElement);
         const nameElement = (document.getElementById('name-url') as HTMLInputElement);
 
-        const newTricks = await getListFromHttp(urlElement.value);
-        await TrickListOptions._fusionTricks(newTricks, nameElement.value);
-        TrickListOptions._saveOptions();
-        TrickListOptions._restoreOptions();
+        if (!document.getElementById(urlElement.value)) {
+            if (!document.getElementById(nameElement.value)) {
+                const newTricks = await getListFromHttp(urlElement.value);
+                await TrickListOptions._fusionTricks(newTricks, nameElement.value);
 
-        if (!TrickListOptions._urlList.url.includes(urlElement.value)) {
-            TrickListOptions._urlList.url.push(urlElement.value);
-        }
-        if (!TrickListOptions._urlList.name.includes(nameElement.value)) {
-            TrickListOptions._urlList.name.push(nameElement.value);
-        }
+                TrickListOptions._saveOptions();
+                TrickListOptions._restoreOptions();
 
-        TrickListOptions._setDisplayExternalList(nameElement.value, urlElement.value);
+                if (!TrickListOptions._urlList.url.includes(urlElement.value)) {
+                    TrickListOptions._urlList.url.push(urlElement.value);
+                }
+                if (!TrickListOptions._urlList.name.includes(nameElement.value)) {
+                    TrickListOptions._urlList.name.push(nameElement.value);
+                }
+                TrickListOptions._setDisplayExternalList(nameElement.value, urlElement.value);
+            } else {
+                window.alert('Le nom choisit a déjà été utilisé');
+            }
+        } else {
+            window.alert('La trickList a déjà été ajouté');
+        }
 
         urlElement.value = null;
         nameElement.value = null;
@@ -335,7 +343,7 @@ export class TrickListOptions {
             if (!elementURL) {
                 TrickListOptions._addNewTrickInDomList(name, url, true);
             } else {
-                alert("L'url a déjà été ajoutée ");
+                alert('La trickList a dékà été importé !');
             }
         } else {
             TrickListOptions._addNewTrickInDomList(name, url, true);
