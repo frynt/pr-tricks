@@ -61,7 +61,7 @@ export class TrickListOptions {
         const formationCheck = (document.getElementById('formation') as HTMLInputElement).checked;
         const detailsCheck = (document.getElementById('details') as HTMLInputElement).checked;
 
-        TrickListOptions._defaultTrickList.map((element: string) => {
+        TrickListOptions._defaultTrickList.forEach((element: string) => {
             const elementSection = `Default TrickList_${element}`;
             const checkbox1 = (document.getElementById(elementSection) as HTMLInputElement);
 
@@ -76,7 +76,6 @@ export class TrickListOptions {
                     await Promise.all(
                         Object.keys(TrickListOptions._externalTricks[project]).map((name: string): void => {
                             const trick = (TrickListOptions._externalTricks)[project][name].name;
-
                             const trickID = `${project}_${trick}`;
                             const checkbox2 = (document.getElementById(trickID) as HTMLInputElement);
                             if (checkbox2.checked) {
@@ -280,7 +279,7 @@ export class TrickListOptions {
     }
 
     /**
-     * @description Show categories section if the formation mode is activated
+     * @description Show default categories section if the formation mode is activated
      */
     private static _showFormationMode(): void {
         const section = (document.getElementById('categories') as HTMLElement);
@@ -293,6 +292,9 @@ export class TrickListOptions {
         }
     }
 
+    /**
+     * @description Show specific section if the project is activated or not
+     */
     private static _showProjectSetion(name: string, url: string): void {
         const section = (document.getElementById(name) as HTMLElement);
         const index = TrickListOptions._urlList.url.indexOf(url);
@@ -346,6 +348,7 @@ export class TrickListOptions {
 
         if (section.firstChild) {
             const elementURL = (document.getElementById(`${name}_${url}`)) as HTMLElement;
+
             if (!elementURL) {
                 TrickListOptions._addNewTrickInDomList(name, url, true);
             } else {
@@ -374,26 +377,31 @@ export class TrickListOptions {
         activeList.appendChild(input);
         activeList.appendChild(label);
 
-        TrickListOptions._removeURL(name, url, sectionID, isActivated);
+        TrickListOptions._removeURL({ name, url, sectionID, isActivated });
     }
 
     /**
      * @description Add a remove button for each url added
      */
-    private static _removeURL(name: string, url: string, sectionID: string, isActivated: boolean): void {
+    private static _removeURL(params: {
+            name: string;
+            url: string;
+            sectionID: string;
+            isActivated: boolean;
+        }): void {
         const section = (document.getElementById('activeLists') as HTMLElement);
-        const input = (document.getElementById(url) as HTMLElement);
-        const label = (document.getElementById(`${name}_${url}`) as HTMLElement);
+        const input = (document.getElementById(params.url) as HTMLElement);
+        const label = (document.getElementById(`${params.name}_${params.url}`) as HTMLElement);
         const btn = (document.createElement('input'));
 
         btn.setAttribute('type', 'button');
         btn.value = 'X';
         btn.addEventListener('click', () => {
-            TrickListOptions._urlList.name.splice(TrickListOptions._urlList.name.indexOf(name), 1);
-            TrickListOptions._urlList.url.splice(TrickListOptions._urlList.url.indexOf(url), 1);
-            TrickListOptions._urlList.isActivated.splice(TrickListOptions._urlList.isActivated.indexOf(isActivated), 1);
+            TrickListOptions._urlList.name.splice(TrickListOptions._urlList.name.indexOf(params.name), 1);
+            TrickListOptions._urlList.url.splice(TrickListOptions._urlList.url.indexOf(params.url), 1);
+            TrickListOptions._urlList.isActivated.splice(TrickListOptions._urlList.isActivated.indexOf(params.isActivated), 1);
 
-            TrickListOptions._removeTrickList(sectionID);
+            TrickListOptions._removeTrickList(params.sectionID);
 
             input.remove();
             label.remove();
@@ -465,6 +473,9 @@ export class TrickListOptions {
         TrickListOptions._init();
     }
 
+    /**
+     * @description On click button, delete importe project and all related data
+     */
     private static _removeTrickList(section: string): void {
         TrickListOptions._externalTricks[section].forEach((trick) => {
             const project = `${section}_${trick.name}`;

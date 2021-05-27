@@ -81,7 +81,7 @@ export class GithubReviewScripts {
     /**
      * @description Set external trick list if exist
      */
-    private async _setExternalTrickList(items: ChromeStorageType, trickList: Trick[]): Promise<void> {
+    private _setExternalTrickList(items: ChromeStorageType, trickList: Trick[]): void {
         if (items.extTricks !== undefined) {
             const externalTrickList: ExternalTricks = JSON.parse(items.extTricks.tricksFromUrl);
             const urlList: urlTricks = JSON.parse(items.extTricks.urlList);
