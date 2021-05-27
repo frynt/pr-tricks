@@ -7,6 +7,7 @@ import { MatchedTrick } from './interfaces/matched-trick.interface';
 import { Trick } from './interfaces/trick.interface';
 import { ChromeStorageType } from './types/chrome-storage.type';
 import { ExternalTricks } from './types/external-tricks.type';
+import { urlTricks } from './types/url-tricks.type';
 
 const trickAddedClass = 'trick-added';
 
@@ -83,16 +84,22 @@ export class GithubReviewScripts {
     private async _setExternalTrickList(items: ChromeStorageType, trickList: Trick[]): Promise<void> {
         if (items.extTricks !== undefined) {
             const externalTrickList: ExternalTricks = JSON.parse(items.extTricks.tricksFromUrl);
+            const urlList: urlTricks = JSON.parse(items.extTricks.urlList);
 
-            Object.values(externalTrickList).map((project) => {
-                const tabTrick: Trick[] = project;
-                tabTrick.forEach((trick) => {
-                    if (items.formation.isActivated) {
-                        if (items.extTricks.tricksNameChecked.includes(trick.name)) {
+            Object.entries(externalTrickList).map(([key, values]) => {
+                const index = urlList.name.indexOf(key);
+                const projectIsActivated = urlList.isActivated[index];
+                const tab: Trick[] = values;
+
+                tab.forEach((trick) => {
+                    if (projectIsActivated) {
+                        if (items.formation.isActivated) {
+                            if (items.extTricks.tricksNameChecked.includes(trick.name)) {
+                                trickList.push(trick);
+                            }
+                        } else {
                             trickList.push(trick);
                         }
-                    } else {
-                        trickList.push(trick);
                     }
                 });
             });
