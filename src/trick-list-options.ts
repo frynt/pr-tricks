@@ -189,7 +189,7 @@ export class TrickListOptions {
             if (items.extTricks !== undefined && items.extTricks.urlList !== undefined) {
                 TrickListOptions._urlList = JSON.parse(items.extTricks.urlList);
 
-                for (let i = 0; i < TrickListOptions._urlList.url.length; i++) {
+                TrickListOptions._urlList.name.forEach((_elem, i) => {
                     const name = TrickListOptions._urlList.name[i];
                     const url = TrickListOptions._urlList.url[i];
                     const isActivated = TrickListOptions._urlList.isActivated[i];
@@ -200,7 +200,7 @@ export class TrickListOptions {
                     } else {
                         window.alert('L\'url a déjà été ajouté');
                     }
-                }
+                });
             }
         });
     }
