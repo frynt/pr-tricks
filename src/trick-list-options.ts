@@ -144,6 +144,7 @@ export class TrickListOptions {
 
                     TrickListOptions._defaultTrickList.forEach((element: string) => {
                         const elementSection = `Default TrickList_${element}`;
+
                         if (tricksNameChecked.includes(elementSection)) {
                             (document.getElementById(elementSection) as HTMLInputElement).checked = true;
                         } else {
@@ -153,14 +154,12 @@ export class TrickListOptions {
                 }
 
                 // Set external tricks from api storage
-                if (items.extTricks.tricksNameChecked !== undefined) {
-                    if (items.extTricks.tricksNameChecked.length !== 0) {
-                        const tricksNameChecked: string[] = JSON.parse(items.extTricks.tricksNameChecked);
+                if (items.extTricks.tricksNameChecked !== undefined && items.extTricks.tricksNameChecked.length !== 0) {
+                    const tricksNameChecked: string[] = JSON.parse(items.extTricks.tricksNameChecked);
 
-                        tricksNameChecked.forEach((element: string) => {
-                            (document.getElementById(element) as HTMLInputElement).checked = true;
-                        });
-                    }
+                    tricksNameChecked.forEach((element: string) => {
+                        (document.getElementById(element) as HTMLInputElement).checked = true;
+                    });
                 }
 
                 TrickListOptions._showFormationMode();
@@ -199,7 +198,7 @@ export class TrickListOptions {
                         TrickListOptions._addNewTrickInDomList(name, url, isActivated);
                         TrickListOptions._showProjectSetion(name, url);
                     } else {
-                        window.alert("L'url a déjà été ajouté");
+                        window.alert('L\'url a déjà été ajouté');
                     }
                 }
             }
@@ -474,7 +473,7 @@ export class TrickListOptions {
     }
 
     /**
-     * @description On click button, delete importe project and all related data
+     * @description On click button, delete import project and all related data
      */
     private static _removeTrickList(section: string): void {
         TrickListOptions._externalTricks[section].forEach((trick) => {
