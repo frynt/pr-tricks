@@ -100,7 +100,3 @@ type `Ctrl + Shift + B`
 ![image](https://user-images.githubusercontent.com/82021898/119958055-f1f67480-bfa2-11eb-9653-ef47ff60559d.png)   
 
 - You can import multiple trickList, but i advise to keep a maximum of 3 imports 
-
-## Contact
-
-For any questions or bugs to report please contact me on Slack as "Hugo Barbi" or by mail as hugo.barbi@needone.fr
