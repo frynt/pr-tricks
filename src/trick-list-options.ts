@@ -447,9 +447,7 @@ export class TrickListOptions {
         TrickListOptions._urlList = { name: [], url: [], isActivated: [] };
         TrickListOptions._externalTricks = {};
 
-        while (TrickList.length > 8) {
-            TrickList.pop();
-        }
+        TrickList.length = 8;
 
         const defaultColor = '#B9C1DF';
 
