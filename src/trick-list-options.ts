@@ -24,7 +24,6 @@ export class TrickListOptions {
     private static _urlList: urlTricks = { name: [], url: [], isActivated: [] };
 
     constructor() {
-        document.addEventListener('DOMContentLoaded', () => TrickListOptions._saveOptions());
         document.addEventListener('DOMContentLoaded', () => TrickListOptions._init());
     }
 
