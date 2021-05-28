@@ -12,19 +12,13 @@ label {
   font-size: medium;
 }
 
-button {
-  margin: 0;
-  padding: 2% 3% 2% 3%;
-  text-align: center;
-  font-size: large;
-}
-
 #submit {
   text-align: center;
 }
 
 #categories {
-  display: none;
+  display: flex;
+  flex-direction: row;
 }
 
 #trickList {
@@ -33,6 +27,11 @@ button {
 
 input {
   font-size: medium;
+}
+
+button {
+  font-size: medium;
+  padding: 2%;
 }
 
 /*# sourceMappingURL=options.css.map */
