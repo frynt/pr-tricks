@@ -100,3 +100,9 @@ type `Ctrl + Shift + B`
 ![image](https://user-images.githubusercontent.com/82021898/119958055-f1f67480-bfa2-11eb-9653-ef47ff60559d.png)   
 
 - You can import multiple trickList, but i advise to keep a maximum of 3 imports 
+
+## Copyright
+
+![Needone](https://static.wixstatic.com/media/4546b3_1dab3f320024483091b29f9b99da0e4e~mv2.png/v1/fill/w_166,h_60,al_c,q_80,usm_0.66_1.00_0.01/LogoNeedoneFull.webp)
+
+Copyright © [Needone](https://www.needone.fr/)
