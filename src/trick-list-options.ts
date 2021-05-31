@@ -31,6 +31,7 @@ export class TrickListOptions {
      * @description Loaded at page start
      */
     private static _init(): void {
+        TrickListOptions._firstInit();
         TrickListOptions._setCategories();
         TrickListOptions._displayCategories();
         TrickListOptions._restoreExternalTricks();
@@ -485,6 +486,17 @@ export class TrickListOptions {
         (document.getElementById(section) as HTMLElement).parentNode.removeChild(document.getElementById(section));
 
         TrickListOptions._saveOptions();
+    }
+
+    /**
+     * @description Initialize chrome api for the first launch of the extension
+     */
+    private static _firstInit(): void {
+        chrome.storage.sync.get((items: ChromeStorageType) => {
+            if (Object.keys(items).length === 0) {
+                TrickListOptions._resetTricks();
+            }
+        });
     }
 }
 
