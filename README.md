@@ -12,7 +12,7 @@
 ![image](https://user-images.githubusercontent.com/82021898/119953680-89a59400-bf9e-11eb-9ce8-f477f41522c6.png)
 
 
-- Pin the extension on chrome is really recommended to easily access to the options
+- Pin the extension on chrome is really recommended to easily access to the options, open the extension to start it
 
 
 - Now go to your pull request and refresh de page, the extension should work and you should see highlight
