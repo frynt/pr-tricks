@@ -60,13 +60,11 @@ type `Ctrl + Shift + B`
 - Pin the extension on chrome is really recommended to easily access to the options
 
 
-- Now when you press the extension icon, you will see a white background.
-![image](https://user-images.githubusercontent.com/82021898/119954347-2e27d600-bf9f-11eb-81c0-e484bcbbd916.png)
+- Now go to your pull request and refresh de page, the extension should work and you should see highlight
+![image](https://user-images.githubusercontent.com/82021898/120171664-90ccdc00-c202-11eb-8021-ca82bfbcd89a.png)
 
-
-- Juste scroll down and press the button "Restaurer", the extension is now initialized and shoud work
-![image](https://user-images.githubusercontent.com/82021898/119954555-63342880-bf9f-11eb-9785-c86964d558db.png)    
-
+- Let's review the extension's options below
+![image](https://user-images.githubusercontent.com/82021898/120172033-ef925580-c202-11eb-8b63-89c06371b26c.png)
 
 
 #### ⚠️ After modifications in extension's options, don't forget to click "Sauvegarder" to apply changes.    
