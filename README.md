@@ -2,6 +2,11 @@
 
 ### First Setup
 
+- First, clone this repository, you will need the `dist` folder ton install the extension
+- In Chrome, go to [extensions](chrome://extensions/)
+- If not already the case, activate the developer mode (top right of the view)
+- In the developer menu (just below the header), select "load unpacked" (charger l'extension non empaquetée) and load your local `dist` directory in PR Tricks project
+
 - Once the extension is intalled, you should see it in the upper right corner of chrome
 ![image](https://user-images.githubusercontent.com/82021898/119953680-89a59400-bf9e-11eb-9ce8-f477f41522c6.png)
 
@@ -90,12 +95,6 @@ npm run watch
 Run watch mode.
 
 type `Ctrl + Shift + B`
-
-## Load extension to chrome
-
-- In Chrome, go to [extensions](chrome://extensions/)
-- If not already the case, activate the developer mode (top right of the view)
-- In the developer menu (just below the header), select "load unpacked" (charger l'extension non empaquetée) and load your local `dist` directory
 
 ## Test
 `npx jest` or `npm run test`
