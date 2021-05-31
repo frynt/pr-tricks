@@ -4,6 +4,7 @@
 
 - First, clone this repository, you will need the `dist` folder ton install the extension
 - In Chrome, go to [extensions](chrome://extensions/)
+![image](https://user-images.githubusercontent.com/82021898/120197967-e49aed80-c221-11eb-8251-d3bbdd0112ef.png)
 - If not already the case, activate the developer mode (top right of the view)
 - In the developer menu (just below the header), select "load unpacked" (charger l'extension non empaquetée) and load your local `dist` directory in PR Tricks project
 
