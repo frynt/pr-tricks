@@ -137,7 +137,6 @@ export class TrickListOptions {
                 (document.getElementById('color') as HTMLInputElement).value = items.config.favoriteColor;
                 document.body.style.backgroundColor = (document.getElementById('color') as HTMLInputElement).value;
                 (document.getElementById('formation') as HTMLInputElement).checked = items.formation.isActivated;
-                (document.getElementById('details') as HTMLInputElement).checked = items.formation.detailIsActivated;
 
                 // Set default tricks from api storage
                 if (items.formation.tricksNameChecked.length !== 0) {

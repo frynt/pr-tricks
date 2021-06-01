@@ -5,7 +5,6 @@ export type ChromeStorageType = {
     formation: {
         isActivated: boolean;
         tricksNameChecked: string;
-        detailIsActivated: boolean;
     };
     extTricks: {
         tricksFromUrl: string;

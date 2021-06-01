@@ -144,13 +144,7 @@ export class GithubReviewScripts {
                     trickCaptured = ` ${trickCaptured}`;
                 }
 
-                let trickDetails = '';
-
-                if (items.formation !== undefined && items.formation.detailIsActivated) {
-                    trickDetails = trick.details;
-                }
-
-                htmlTricks += `<span title="${trickDetails}" style="color:${trick.color}">${trick.emoji}${trickCaptured}</span>`;
+                htmlTricks += `<span title="${trick.details}" style="color:${trick.color}">${trick.emoji}${trickCaptured}</span>`;
 
                 if (index + 1 < matchTricksUnique.length) {
                     htmlTricks += ' - ';
