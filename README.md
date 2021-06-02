@@ -4,52 +4,12 @@ An extension for google chrome to automatically analyse pull requests
 
 ![image](https://user-images.githubusercontent.com/16685940/112637090-12d50900-8e3e-11eb-8ce5-b6f10cc2d342.png)
 
-
-## Prerequisites
-
-* [node + npm](https://nodejs.org/) (Current Version)
-
-## Project Structure
-
-* src/.ts: TypeScript source files
-* dist: Chrome Extension directory
-
-## Setup
-
-```
-npm install
-```
-
-## Build
-
-```
-npm run build
-```
-
-## Build in watch mode
-
-### terminal
-
-```
-npm run watch
-```
-
-### Visual Studio Code
-
-Run watch mode.
-
-type `Ctrl + Shift + B`
-
-## Test
-`npx jest` or `npm run test`
-
-#### ⚠️ Before starting the tutorial, you need to run `npm run build` once to generate `dist` directory. This dir is require to add the extension in chrome. 
-
-## Tutorial : How to use the PR Tricks
+## Installation on Google Chrome
 
 ### First Setup
 
-- First, clone this repository, you will need the `dist` folder ton install the extension
+- Clone this repository, you will need the `dist` folder ton install the extension
+- Generate the `dist` directory (see [Devlopment](#development))
 - In Chrome, go to [extensions](chrome://extensions/)
 ![image](https://user-images.githubusercontent.com/82021898/120197967-e49aed80-c221-11eb-8251-d3bbdd0112ef.png)
 - If not already the case, activate the developer mode (top right of the view)
@@ -100,6 +60,49 @@ type `Ctrl + Shift + B`
 ![image](https://user-images.githubusercontent.com/82021898/119958055-f1f67480-bfa2-11eb-9653-ef47ff60559d.png)   
 
 - You can import multiple trickList, but i advise to keep a maximum of 3 imports   
+
+
+##  <a name="devlopment"></a> Development
+
+###>Prerequisites
+
+* [node + npm](https://nodejs.org/) (Current Version)
+
+### Project Structure
+
+* src/.ts: TypeScript source files
+* dist: Chrome Extension directory
+
+### Setup
+
+```
+npm install
+```
+
+### Build
+
+```
+npm run build
+```
+
+### Build in watch mode
+
+#### terminal
+
+```
+npm run watch
+```
+
+#### Visual Studio Code
+
+Run watch mode.
+
+type `Ctrl + Shift + B`
+
+### Test
+`npx jest` or `npm run test`
+
+
 
 
 ## Contributors
