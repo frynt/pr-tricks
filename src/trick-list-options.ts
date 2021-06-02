@@ -60,7 +60,6 @@ export class TrickListOptions {
     private static async _saveOptions(): Promise<void> {
         const color = (document.getElementById('color') as HTMLInputElement).value;
         const formationCheck = (document.getElementById('formation') as HTMLInputElement).checked;
-        const detailsCheck = (document.getElementById('details') as HTMLInputElement).checked;
 
         TrickListOptions._defaultTrickList.forEach((element: string) => {
             const elementSection = `Default TrickList_${element}`;
@@ -105,7 +104,6 @@ export class TrickListOptions {
                 favoriteColor: color,
             },
             formation: {
-                detailIsActivated: detailsCheck,
                 isActivated: formationCheck,
                 tricksNameChecked: JSON.stringify(TrickListOptions._defaultTrickNames),
             },
@@ -272,6 +270,7 @@ export class TrickListOptions {
         label.innerHTML = element;
         input.setAttribute('type', 'checkbox');
         input.id = `${section.firstChild.textContent}_${element}`;
+        input.addEventListener('onchange', () => TrickListOptions._saveOptions());
         section.appendChild(input);
         section.appendChild(label);
         section.appendChild(document.createElement('br'));
