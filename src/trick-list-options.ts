@@ -37,8 +37,14 @@ export class TrickListOptions {
         TrickListOptions._restoreExternalTricks();
         TrickListOptions._restoreOptions();
 
-        document.getElementById('formation').addEventListener('change', () => TrickListOptions._showFormationMode());
-        document.getElementById('save').addEventListener('click', TrickListOptions._saveOptions);
+        document.getElementById('formation').addEventListener('change', () => {
+            TrickListOptions._showFormationMode();
+            TrickListOptions._saveOptions();
+        });
+        document.getElementById('color').addEventListener('input', async () => {
+            await TrickListOptions._saveOptions();
+            TrickListOptions._restoreOptions();
+        });
         document.getElementById('url-submit').addEventListener('click', TrickListOptions._addTricksFromURL);
         document.getElementById('reset-storage').addEventListener('click', TrickListOptions._resetTricks);
     }
@@ -132,8 +138,8 @@ export class TrickListOptions {
         // Get api preferences from chrome storage and restore user options
         chrome.storage.sync.get(
             async (items: ChromeStorageType) => {
+                document.body.style.backgroundColor = items.config.favoriteColor;
                 (document.getElementById('color') as HTMLInputElement).value = items.config.favoriteColor;
-                document.body.style.backgroundColor = (document.getElementById('color') as HTMLInputElement).value;
                 (document.getElementById('formation') as HTMLInputElement).checked = items.formation.isActivated;
 
                 // Set default tricks from api storage
@@ -194,7 +200,7 @@ export class TrickListOptions {
 
                     if (!document.getElementById(url)) {
                         TrickListOptions._addNewTrickInDomList(name, url, isActivated);
-                        TrickListOptions._showProjectSetion(name, url);
+                        TrickListOptions._showProjectSection(name, url);
                     } else {
                         window.alert('L\'url a déjà été ajouté');
                     }
@@ -270,7 +276,7 @@ export class TrickListOptions {
         label.innerHTML = element;
         input.setAttribute('type', 'checkbox');
         input.id = `${section.firstChild.textContent}_${element}`;
-        input.addEventListener('onchange', () => TrickListOptions._saveOptions());
+        input.addEventListener('change', () => TrickListOptions._saveOptions());
         section.appendChild(input);
         section.appendChild(label);
         section.appendChild(document.createElement('br'));
@@ -293,7 +299,7 @@ export class TrickListOptions {
     /**
      * @description Show specific section if the project is activated or not
      */
-    private static _showProjectSetion(name: string, url: string): void {
+    private static _showProjectSection(name: string, url: string): void {
         const section = (document.getElementById(name) as HTMLElement);
         const index = TrickListOptions._urlList.url.indexOf(url);
         const projectIsActivated = TrickListOptions._urlList.isActivated[index];
@@ -372,6 +378,10 @@ export class TrickListOptions {
         input.setAttribute('type', 'checkbox');
         input.id = url;
         input.checked = isActivated;
+        input.addEventListener('change', async () => {
+            await TrickListOptions._saveOptions();
+            TrickListOptions._showProjectSection(name, url);
+        });
         activeList.appendChild(input);
         activeList.appendChild(label);
 
