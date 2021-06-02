@@ -119,9 +119,7 @@ export class TrickListOptions {
                 urlList: JSON.stringify(TrickListOptions._urlList),
             } };
 
-        chrome.storage.sync.set(items as ChromeStorageType, () => {
-            // Options saved
-        });
+        chrome.storage.sync.set(items as ChromeStorageType);
     }
 
     /**
