@@ -62,9 +62,9 @@ An extension for google chrome to automatically analyse pull requests
 - You can import multiple trickList, but i advise to keep a maximum of 3 imports   
 
 
-##Development
+## Development
 
-###Prerequisites
+### Prerequisites
 
 * [node + npm](https://nodejs.org/) (Current Version)
 
