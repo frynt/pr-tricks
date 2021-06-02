@@ -120,13 +120,7 @@ export class TrickListOptions {
             } };
 
         chrome.storage.sync.set(items as ChromeStorageType, () => {
-            // Update status to let user know options were saved.
-            const status = document.getElementById('status');
-            status.textContent = 'Options saved.';
-
-            setTimeout(() => {
-                status.textContent = '';
-            }, 2000);
+            // Options saved
         });
     }
 
