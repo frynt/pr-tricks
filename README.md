@@ -9,7 +9,7 @@ An extension for google chrome to automatically analyse pull requests
 ### First Setup
 
 - Clone this repository, you will need the `dist` folder ton install the extension
-- Generate the `dist` directory (see [Devlopment](#development))
+- Generate the `dist` directory (see [Development](#Development))
 - In Chrome, go to [extensions](chrome://extensions/)
 ![image](https://user-images.githubusercontent.com/82021898/120197967-e49aed80-c221-11eb-8251-d3bbdd0112ef.png)
 - If not already the case, activate the developer mode (top right of the view)
@@ -62,9 +62,9 @@ An extension for google chrome to automatically analyse pull requests
 - You can import multiple trickList, but i advise to keep a maximum of 3 imports   
 
 
-##  <a name="devlopment"></a> Development
+##Development
 
-###>Prerequisites
+###Prerequisites
 
 * [node + npm](https://nodejs.org/) (Current Version)
 
