@@ -66,10 +66,7 @@ type `Ctrl + Shift + B`
 ![image](https://user-images.githubusercontent.com/82021898/120171664-90ccdc00-c202-11eb-8021-ca82bfbcd89a.png)
 
 - Let's review the extension's options below
-![image](https://user-images.githubusercontent.com/82021898/120172033-ef925580-c202-11eb-8b63-89c06371b26c.png)
-
-
-#### ⚠️ After modifications in extension's options, don't forget to click "Sauvegarder" to apply changes.    
+![image](https://user-images.githubusercontent.com/82021898/120172033-ef925580-c202-11eb-8b63-89c06371b26c.png)  
 
 
 ### Use "Mode formation"
