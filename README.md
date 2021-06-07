@@ -5,7 +5,6 @@ An extension for google chrome to automatically analyse pull requests
 ![image](https://user-images.githubusercontent.com/16685940/112637090-12d50900-8e3e-11eb-8ce5-b6f10cc2d342.png)
 
 ### Video Tutorial : https://drive.google.com/file/d/1SzbZnBynT1fyxt-mOluO7qtaPZ6zxTTU/view?usp=sharing
-
 ## Installation on Google Chrome
 
 ### First Setup
