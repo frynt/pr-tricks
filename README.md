@@ -7,10 +7,10 @@ An extension for google chrome to automatically analyse pull requests
 
 ## Installation on Google Chrome
 
+#### You can download the last `dist.zip` from the release page https://github.com/needone/pr-tricks/releases
+
 ### First Setup
 
-- Clone this repository, you will need the `dist` folder ton install the extension
-- Generate the `dist` directory (see [Development](#Development))
 - In Chrome, go to [extensions](chrome://extensions/)
 ![image](https://user-images.githubusercontent.com/82021898/120197967-e49aed80-c221-11eb-8251-d3bbdd0112ef.png)
 - If not already the case, activate the developer mode (top right of the view)
