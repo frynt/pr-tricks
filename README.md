@@ -46,9 +46,8 @@ An extension for google chrome to automatically analyse pull requests
 
 ### Use "Ajouter une trickList externe"
 
-- First, you need to create you own JSON file with all tricks propertys (You can you this as a model: https://mocki.io/v1/2d2d322f-8f8c-4158-8283-d081898f4df5). If you want to start from scratch you can do it. To host your JSON file, you can use https://mocki.io/.
-![image](https://user-images.githubusercontent.com/82021898/119957372-4fd68c80-bfa2-11eb-8cba-6ebb8b06ed26.png)
-![image](https://user-images.githubusercontent.com/82021898/119957440-5d8c1200-bfa2-11eb-9f55-7d63c8fdc55f.png)
+- First, you need to create you own JSON file with all tricks propertys (cf image under). If you want to start from scratch you can do it. To host your JSON file, you can use https://mocki.io/.
+![image](https://user-images.githubusercontent.com/82021898/121181210-0ddefd80-c862-11eb-94b8-0167acbae568.png)
 
 - Then go to PR Tricks and choose a name for your trickList, paste your hosted JSON and press OK.
 ![image](https://user-images.githubusercontent.com/82021898/119957627-857b7580-bfa2-11eb-8c10-13a09517bfd3.png)
