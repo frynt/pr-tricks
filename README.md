@@ -7,7 +7,6 @@ An extension for google chrome to automatically analyse pull requests
 
 ## Installation on Google Chrome
 
-#### You can download the last `dist.zip` from the release page https://github.com/needone/pr-tricks/releases
 
 ### First Setup
 
