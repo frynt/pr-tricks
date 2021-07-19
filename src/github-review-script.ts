@@ -93,11 +93,7 @@ export class GithubReviewScripts {
 
                 tab.forEach((trick) => {
                     if (projectIsActivated) {
-                        if (items.formation.isActivated) {
-                            if (items.extTricks.tricksNameChecked.includes(trick.name)) {
-                                trickList.push(trick);
-                            }
-                        } else {
+                        if (items.extTricks.tricksNameChecked.includes(trick.name)) {
                             trickList.push(trick);
                         }
                     }
@@ -113,11 +109,7 @@ export class GithubReviewScripts {
         if (items.formation !== undefined) {
             await Promise.all(
                 TrickList.map((trick) => {
-                    if (items.formation.isActivated) {
-                        if (items.formation.tricksNameChecked.includes(trick.name)) {
-                            trickList.push(trick);
-                        }
-                    } else {
+                    if (items.formation.tricksNameChecked.includes(trick.name)) {
                         trickList.push(trick);
                     }
                 }),

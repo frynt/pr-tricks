@@ -3,7 +3,6 @@ export type ChromeStorageType = {
         favoriteColor: string;
     };
     formation: {
-        isActivated: boolean;
         tricksNameChecked: string;
     };
     extTricks: {
