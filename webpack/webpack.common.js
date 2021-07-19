@@ -6,7 +6,7 @@ var glob = require("glob");
 
 module.exports = {
     entry: glob
-        .sync(path.join(__dirname, srcDir + "*.ts"))
+        .sync(path.join(__dirname, srcDir) + '*.{ts,js}')
         .reduce(function (obj, el) {
             obj[path.parse(el).name] = el;
             return obj;

@@ -37,10 +37,8 @@ export class TrickListOptions {
         TrickListOptions._restoreExternalTricks();
         TrickListOptions._restoreOptions();
 
-        document.getElementById('formation').addEventListener('change', () => {
-            TrickListOptions._showFormationMode();
-            TrickListOptions._saveOptions();
-        });
+        // TrickListOptions._saveOptions();
+
         document.getElementById('color').addEventListener('input', async () => {
             await TrickListOptions._saveOptions();
             TrickListOptions._restoreOptions();
@@ -65,7 +63,6 @@ export class TrickListOptions {
      */
     private static async _saveOptions(): Promise<void> {
         const color = (document.getElementById('color') as HTMLInputElement).value;
-        const formationCheck = (document.getElementById('formation') as HTMLInputElement).checked;
 
         TrickListOptions._defaultTrickList.forEach((element: string) => {
             const elementSection = `Default TrickList_${element}`;
@@ -110,16 +107,15 @@ export class TrickListOptions {
                 favoriteColor: color,
             },
             formation: {
-                isActivated: formationCheck,
                 tricksNameChecked: JSON.stringify(TrickListOptions._defaultTrickNames),
             },
             extTricks: {
                 tricksFromUrl: JSON.stringify(TrickListOptions._externalTricks),
                 tricksNameChecked: JSON.stringify(TrickListOptions._extTrickNames),
                 urlList: JSON.stringify(TrickListOptions._urlList),
-            } };
+            } } as ChromeStorageType;
 
-        chrome.storage.sync.set(items as ChromeStorageType);
+        chrome.storage.sync.set(items);
     }
 
     /**
@@ -130,35 +126,35 @@ export class TrickListOptions {
         // Get api preferences from chrome storage and restore user options
         chrome.storage.sync.get(
             async (items: ChromeStorageType) => {
-                document.body.style.backgroundColor = items.config.favoriteColor;
-                (document.getElementById('color') as HTMLInputElement).value = items.config.favoriteColor;
-                (document.getElementById('formation') as HTMLInputElement).checked = items.formation.isActivated;
+                if (items.config) {
+                    document.body.style.backgroundColor = items.config.favoriteColor;
+                    (document.getElementById('color') as HTMLInputElement).value = items.config.favoriteColor;
+                }
+                if (items.formation) {
+                    // Set default tricks from api storage
+                    if (items.formation.tricksNameChecked.length !== 0) {
+                        const tricksNameChecked: string[] = JSON.parse(items.formation.tricksNameChecked);
 
-                // Set default tricks from api storage
-                if (items.formation.tricksNameChecked.length !== 0) {
-                    const tricksNameChecked: string[] = JSON.parse(items.formation.tricksNameChecked);
+                        TrickListOptions._defaultTrickList.forEach((element: string) => {
+                            const elementSection = `Default TrickList_${element}`;
 
-                    TrickListOptions._defaultTrickList.forEach((element: string) => {
-                        const elementSection = `Default TrickList_${element}`;
-
-                        if (tricksNameChecked.includes(elementSection)) {
-                            (document.getElementById(elementSection) as HTMLInputElement).checked = true;
-                        } else {
-                            (document.getElementById(elementSection) as HTMLInputElement).checked = false;
-                        }
-                    });
+                            if (tricksNameChecked.includes(elementSection)) {
+                                (document.getElementById(elementSection) as HTMLInputElement).checked = true;
+                            } else {
+                                (document.getElementById(elementSection) as HTMLInputElement).checked = false;
+                            }
+                        });
+                    }
                 }
 
                 // Set external tricks from api storage
-                if (items.extTricks.tricksNameChecked !== undefined && items.extTricks.tricksNameChecked.length !== 0) {
+                if (items.extTricks && items.extTricks.tricksNameChecked !== undefined && items.extTricks.tricksNameChecked.length !== 0) {
                     const tricksNameChecked: string[] = JSON.parse(items.extTricks.tricksNameChecked);
 
                     tricksNameChecked.forEach((element: string) => {
                         (document.getElementById(element) as HTMLInputElement).checked = true;
                     });
                 }
-
-                TrickListOptions._showFormationMode();
             },
         );
     }
@@ -211,7 +207,7 @@ export class TrickListOptions {
         }
 
         const defaultSection = document.createElement('section');
-        const defaultTitle = document.createElement('h3');
+        const defaultTitle = document.createElement('h4');
         defaultTitle.innerText = 'Default TrickList';
 
         defaultSection.appendChild(defaultTitle);
@@ -272,20 +268,6 @@ export class TrickListOptions {
         section.appendChild(input);
         section.appendChild(label);
         section.appendChild(document.createElement('br'));
-    }
-
-    /**
-     * @description Show default categories section if the formation mode is activated
-     */
-    private static _showFormationMode(): void {
-        const section = (document.getElementById('categories') as HTMLElement);
-        const activated = (document.getElementById('formation') as HTMLInputElement);
-
-        if (activated.checked) {
-            section.style.display = 'flex';
-        } else {
-            section.style.display = 'none';
-        }
     }
 
     /**
@@ -457,7 +439,6 @@ export class TrickListOptions {
                 favoriteColor: defaultColor,
             },
             formation: {
-                isActivated: false,
                 tricksNameChecked: JSON.stringify(TrickListOptions._defaultTrickNames),
                 detailIsActivated: false,
             },
