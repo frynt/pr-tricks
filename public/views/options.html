@@ -12,7 +12,10 @@
         content="width=device-width, initial-scale=1.0"
     />
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link
+        rel="stylesheet"
+        href="../styles/boostrap.min.css"
+    >
     <link
         rel="stylesheet"
         href="../styles/options.css"
@@ -21,84 +24,113 @@
 </head>
 
 <body>
-    <h1>PR Tricks Options</h1>
-    <hr />
-
-    <section>
-        <section>
-            <h2>Listes de tricks chargées</h2>
-            <!-- list fill auto -->
-            <ul id="activeLists"></ul>
-
-            <h3>Ajouter une liste externe :</h3>
-            <label for="name-url">
-                Entrez le nom de votre liste :
-            </label>
-            <input
-                type="text"
-                id="name-url"
-                name="url"
-            >
-            <br>
-            <label for="url">
-                Tapez une URL :
-            </label>
-            <input
-                type="text"
-                id="url"
-                name="url"
-            >
-            <input
-                type="button"
-                id="url-submit"
-                class="url-submit"
-                value="OK"
-            >
-            <br>
-        </section>
-        <hr />
-        <h2>Personnalisation</h2>
-            <input
-                type="checkbox"
-                id="formation"
-                name="formation"
-            />
-            <label for="formation">Personnaliser les tricks</label>
-            <br>
-        <section id="categories"></section>
-        <hr />
-        
-        <section>
-            <h2>Couleur du thème</h2>
-            <label for="color">Thème: </label>
-            <input
-                type="color"
-                id="color"
-                value="#B9C1DF"
-            >
-            </select>
-        </section>
-        <hr />
-
-        <section>
-            <h2>Paramètres</h2>
-            <label for="reset">Réinitialiser le plugin aux valeurs par défaut : </label>
-            <input
-                type="button"
-                id="reset-storage"
-                name="reset"
-                value="Restaurer"
-            >
-        </section>
-    </section>
-    <hr />
+    <div class="accordion container" id="accordionOfOptions">
+        <div class="accordion-item row">
+          <h2 class="accordion-header container" id="headingOne">
+              <div class="row">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        Liste des trickList
+                  </button>
+              </div>
+          </h2>
+          <div id="collapseOne" class="accordion-collapse collapse show container" aria-labelledby="headingOne" data-bs-parent="#accordionOfOptions">
+            <div class="accordion-body row">
+                <div class="container">
+                    <div class="row">
+                        <p>Voici les listes actuellement chargées :</p>
+                    </div>
+                    <div class="row">
+                        <ul id="activeLists"></ul>
+                    </div>
+                    <div class="row">
+                        <h3>Ajouter une liste externe :</h3>
+                        <div>
+                            <label for="name-url">
+                                Nom de votre liste :
+                            </label>
+                            <input
+                                type="text"
+                                id="name-url"
+                                name="url"
+                            >
+                            <br>
+                            <label for="url">
+                                URL (vous pouvez utiliser le service <a target="blank" href="https://www.npoint.io">npoint</a>) : 
+                            </label>
+                            <input
+                                type="text"
+                                id="url"
+                                name="url"
+                            >
+                            <input
+                                type="button"
+                                id="url-submit"
+                                class="url-submit"
+                                value="Ajouter la liste"
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item row">
+          <h2 class="accordion-header container" id="headingTwo">
+              <div class="row">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    Personnalisation
+                </button>
+            </div>
+          </h2>
+          <div id="collapseTwo" class="accordion-collapse collapse container" aria-labelledby="headingTwo" data-bs-parent="#accordionOfOptions">
+            <div class="accordion-body row">
+                    <input
+                        type="checkbox"
+                        id="formation"
+                        name="formation"
+                    />
+                    <label for="formation">Personnaliser les tricks</label>
+                </div>
+                <section id="categories"></section>
+            </div>
+        </div>
+        <div class="accordion-item row">
+            <h2 class="accordion-header container" id="headingFour">
+                <div class="row">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                        Paramètres
+                    </button>
+                </div>
+            </h2>
+            <div id="collapseFour" class="accordion-collapse collapse container" aria-labelledby="headingFour" data-bs-parent="#accordionOfOptions">
+                <div class="accordion-body">
+                    <div class="row">
+                        <label for="color">Couleur du thème : </label>
+                        <input
+                            type="color"
+                            id="color"
+                            value="#B9C1DF"
+                        >
+                        </select>
+                    </div>
+                    <div class="row">
+                        <label for="reset">Réinitialiser le plugin aux valeurs par défaut : </label>
+                        <input
+                            type="button"
+                            id="reset-storage"
+                            name="reset"
+                            value="Restaurer"
+                        >
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="../trick-list-options.js"></script>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="../bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

@@ -130,27 +130,30 @@ export class TrickListOptions {
         // Get api preferences from chrome storage and restore user options
         chrome.storage.sync.get(
             async (items: ChromeStorageType) => {
-                document.body.style.backgroundColor = items.config.favoriteColor;
-                (document.getElementById('color') as HTMLInputElement).value = items.config.favoriteColor;
-                (document.getElementById('formation') as HTMLInputElement).checked = items.formation.isActivated;
+                if (items.config) {
+                    document.body.style.backgroundColor = items.config.favoriteColor;
+                    (document.getElementById('color') as HTMLInputElement).value = items.config.favoriteColor;
+                }
+                if (items.formation) {
+                    (document.getElementById('formation') as HTMLInputElement).checked = items.formation.isActivated;
+                    // Set default tricks from api storage
+                    if (items.formation.tricksNameChecked.length !== 0) {
+                        const tricksNameChecked: string[] = JSON.parse(items.formation.tricksNameChecked);
 
-                // Set default tricks from api storage
-                if (items.formation.tricksNameChecked.length !== 0) {
-                    const tricksNameChecked: string[] = JSON.parse(items.formation.tricksNameChecked);
+                        TrickListOptions._defaultTrickList.forEach((element: string) => {
+                            const elementSection = `Default TrickList_${element}`;
 
-                    TrickListOptions._defaultTrickList.forEach((element: string) => {
-                        const elementSection = `Default TrickList_${element}`;
-
-                        if (tricksNameChecked.includes(elementSection)) {
-                            (document.getElementById(elementSection) as HTMLInputElement).checked = true;
-                        } else {
-                            (document.getElementById(elementSection) as HTMLInputElement).checked = false;
-                        }
-                    });
+                            if (tricksNameChecked.includes(elementSection)) {
+                                (document.getElementById(elementSection) as HTMLInputElement).checked = true;
+                            } else {
+                                (document.getElementById(elementSection) as HTMLInputElement).checked = false;
+                            }
+                        });
+                    }
                 }
 
                 // Set external tricks from api storage
-                if (items.extTricks.tricksNameChecked !== undefined && items.extTricks.tricksNameChecked.length !== 0) {
+                if (items.extTricks && items.extTricks.tricksNameChecked !== undefined && items.extTricks.tricksNameChecked.length !== 0) {
                     const tricksNameChecked: string[] = JSON.parse(items.extTricks.tricksNameChecked);
 
                     tricksNameChecked.forEach((element: string) => {

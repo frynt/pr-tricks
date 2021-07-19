@@ -1,19 +1,7 @@
 body {
-  margin-right: 50%;
-  width: max-content;
+  /* margin-right: 50%; */
+  width: 600px;
   height: min-content;
-}
-
-h1 {
-  text-align: center;
-}
-
-label {
-  font-size: medium;
-}
-
-#submit {
-  text-align: center;
 }
 
 #categories {
@@ -23,15 +11,6 @@ label {
 
 #trickList {
   display: none;
-}
-
-input {
-  font-size: medium;
-}
-
-button {
-  font-size: medium;
-  padding: 2%;
 }
 
 /*# sourceMappingURL=options.css.map */
