@@ -347,7 +347,7 @@ export class TrickListOptions {
         const input = document.createElement('input');
         const label = document.createElement('label');
 
-        label.innerHTML = name;
+        label.innerHTML = `<a target="blank" href="${url}">${name}</a>`;
         label.id = `${name}_${url}`;
         input.setAttribute('type', 'checkbox');
         input.id = url;
@@ -359,13 +359,13 @@ export class TrickListOptions {
         activeList.appendChild(input);
         activeList.appendChild(label);
 
-        TrickListOptions._removeURL({ name, url, sectionID, isActivated });
+        TrickListOptions._addRemoveTrickListButton({ name, url, sectionID, isActivated });
     }
 
     /**
      * @description Add a remove button for each url added
      */
-    private static _removeURL(params: {
+    private static _addRemoveTrickListButton(params: {
             name: string;
             url: string;
             sectionID: string;
@@ -377,7 +377,7 @@ export class TrickListOptions {
         const btn = (document.createElement('input'));
 
         btn.setAttribute('type', 'button');
-        btn.value = 'X';
+        btn.value = 'Supprimer';
         btn.addEventListener('click', () => {
             TrickListOptions._urlList.name.splice(TrickListOptions._urlList.name.indexOf(params.name), 1);
             TrickListOptions._urlList.url.splice(TrickListOptions._urlList.url.indexOf(params.url), 1);
