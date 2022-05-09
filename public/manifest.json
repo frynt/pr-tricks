@@ -10,16 +10,18 @@
     "storage"
   ],
   "host_permissions": [
-    "https://github.com/*"
+    "https://github.com/*",
+    "https://bitbucket.org/*"
   ],
   "content_scripts": [
     {
       "matches": [
-        "https://github.com/*"
+        "https://github.com/*",
+        "https://bitbucket.org/*"
       ],
       "js": [
         "vendor.js",
-        "github-review-script.js"
+        "review-script.js"
       ]
     }
   ],

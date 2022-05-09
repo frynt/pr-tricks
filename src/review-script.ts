@@ -36,7 +36,12 @@ export class GithubReviewScripts {
      * @description loop over DOM elements, add the class on the elements and ended by set TrickList
      */
     private async _loopOverDOMElements(): Promise<void> {
-        const elements = document.querySelectorAll(`td.blob-code.blob-code-addition .blob-code-inner.blob-code-marker:not(.${trickAddedClass})`);
+        // FOR GITHUB
+        const elementsGithub = document.querySelectorAll(`.type-add .code-diff:not(.${trickAddedClass})`);
+        // FOR BITBUCKET
+        const elementsBitbucket = document.querySelectorAll(`.type-add .code-diff:not(.${trickAddedClass})`);
+
+        const elements = [...elementsGithub, ...elementsBitbucket];
 
         for await (const element of elements) {
             if (!(element instanceof HTMLElement)) {
@@ -56,14 +61,11 @@ export class GithubReviewScripts {
     ): void {
         const matchedTricks: MatchedTrick[] = [];
         const trickList: Trick[] = [];
-
         chrome.storage.sync.get(async (items: ChromeStorageType) => {
             await this._setExternalTrickList(items, trickList);
             await this._setFormationTrickList(items, trickList);
-
             trickList.forEach((trick) => {
                 const match = new RegExp(trick.pattern, 'gi').exec(element.innerText);
-
                 if (match) {
                     const captured = match.slice(1, match.length);
                     matchedTricks.push({
@@ -90,7 +92,6 @@ export class GithubReviewScripts {
                 const index = urlList.name.indexOf(key);
                 const projectIsActivated = urlList.isActivated[index];
                 const tab: Trick[] = values;
-
                 tab.forEach((trick) => {
                     if (projectIsActivated) {
                         if (items.extTricks.tricksNameChecked.includes(trick.name)) {
@@ -144,7 +145,6 @@ export class GithubReviewScripts {
             });
 
             const backColor = items.config.favoriteColor;
-
             element.insertAdjacentHTML('beforeend', `<div style="display: inline-block;border-radius: 6px;font-size:15px; border: 1px solid black;background-color:${backColor};padding: 1px 1px 1px 1px; vertical-align: middle;">${htmlTricks}</div>`);
         }
     }
