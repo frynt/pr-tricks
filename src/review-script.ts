@@ -37,7 +37,7 @@ export class GithubReviewScripts {
      */
     private async _loopOverDOMElements(): Promise<void> {
         // FOR GITHUB
-        const elementsGithub = document.querySelectorAll(`.type-add .code-diff:not(.${trickAddedClass})`);
+        const elementsGithub = document.querySelectorAll(`td.blob-code.blob-code-addition .blob-code-inner.blob-code-marker:not(.${trickAddedClass})`);
         // FOR BITBUCKET
         const elementsBitbucket = document.querySelectorAll(`.type-add .code-diff:not(.${trickAddedClass})`);
 
