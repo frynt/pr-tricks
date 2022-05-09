@@ -11,12 +11,14 @@
   ],
   "host_permissions": [
     "https://github.com/*",
+    "https://gitlab.com/*",
     "https://bitbucket.org/*"
   ],
   "content_scripts": [
     {
       "matches": [
         "https://github.com/*",
+        "https://gitlab.com/*",
         "https://bitbucket.org/*"
       ],
       "js": [

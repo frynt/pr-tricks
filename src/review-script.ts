@@ -40,15 +40,15 @@ export class GithubReviewScripts {
         const elementsGithub = document.querySelectorAll(`td.blob-code.blob-code-addition .blob-code-inner.blob-code-marker:not(.${trickAddedClass})`);
         // FOR BITBUCKET
         const elementsBitbucket = document.querySelectorAll(`.type-add .code-diff:not(.${trickAddedClass})`);
-
-        const elements = [...elementsGithub, ...elementsBitbucket];
-
+        // FOR GITLAB
+        const elementsGitlab = document.querySelectorAll(`.line_content.new .line:not(.${trickAddedClass})`);
+        
+        const elements = [...elementsGithub, ...elementsBitbucket, ...elementsGitlab];
         for await (const element of elements) {
             if (!(element instanceof HTMLElement)) {
                 continue;
             }
             element.classList.add(trickAddedClass);
-
             this._setTrickListInDOM(element);
         }
     }
