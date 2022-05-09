@@ -196,3 +196,7 @@ export const TrickList: Trick[] = [{
     emoji: '📜',
     details: 'Migrations of databases for exemple',
 }];
+
+if (true) {
+    console.log(3);
+}
