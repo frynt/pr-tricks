@@ -96,11 +96,6 @@ Run watch mode.
 
 type `Ctrl + Shift + B`
 
-### Test
-`npx jest` or `npm run test`
-
-
-
 
 ## Contributors
 

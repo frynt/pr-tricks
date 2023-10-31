@@ -42,8 +42,17 @@ export class GithubReviewScripts {
         const elementsBitbucket = document.querySelectorAll(`.type-add .code-diff:not(.${trickAddedClass})`);
         // FOR GITLAB
         const elementsGitlab = document.querySelectorAll(`.line_content.new .line:not(.${trickAddedClass})`);
-        
-        const elements = [...elementsGithub, ...elementsBitbucket, ...elementsGitlab];
+
+        const elements = [];
+        elementsGithub.forEach((element) => {
+            elements.push(element);
+        });
+        elementsBitbucket.forEach((element) => {
+            elements.push(element);
+        });
+        elementsGitlab.forEach((element) => {
+            elements.push(element);
+        });
         for await (const element of elements) {
             if (!(element instanceof HTMLElement)) {
                 continue;
@@ -88,18 +97,21 @@ export class GithubReviewScripts {
             const externalTrickList: ExternalTricks = JSON.parse(items.extTricks.tricksFromUrl);
             const urlList: urlTricks = JSON.parse(items.extTricks.urlList);
 
-            Object.entries(externalTrickList).map(([key, values]) => {
-                const index = urlList.name.indexOf(key);
-                const projectIsActivated = urlList.isActivated[index];
-                const tab: Trick[] = values;
-                tab.forEach((trick) => {
-                    if (projectIsActivated) {
-                        if (items.extTricks.tricksNameChecked.includes(trick.name)) {
-                            trickList.push(trick);
+            for (const key in externalTrickList) {
+                if (externalTrickList.hasOwnProperty(key)) {
+                    const values = externalTrickList[key];
+                    const index = urlList.name.indexOf(key);
+                    const projectIsActivated = urlList.isActivated[index];
+                    const tab: Trick[] = values;
+                    tab.forEach((trick) => {
+                        if (projectIsActivated) {
+                            if (items.extTricks.tricksNameChecked.includes(trick.name)) {
+                                trickList.push(trick);
+                            }
                         }
-                    }
-                });
-            });
+                    });
+                }
+            }
         }
     }
 
