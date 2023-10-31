@@ -44,6 +44,11 @@ export class GithubReviewScripts {
         const elementsGitlab = document.querySelectorAll(`.line_content.new .line:not(.${trickAddedClass})`);
 
         const elements = [];
+        // eslint-disable-next-line no-constant-condition
+        if (true) {
+            // eslint-disable-next-line no-console
+            console.log('lol');
+        }
         elementsGithub.forEach((element) => {
             elements.push(element);
         });
