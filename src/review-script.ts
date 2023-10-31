@@ -13,23 +13,7 @@ const trickAddedClass = 'trick-added';
 
 export class GithubReviewScripts {
     constructor() {
-        this._initTrickOnWindowsLoad();
-        this._listenScrollEvent();
-    }
-
-    private _initTrickOnWindowsLoad(): void {
-        window.addEventListener('load', async () => {
-            await this._loopOverDOMElements();
-        });
-    }
-
-    /**
-     * @description Listen scroll event for set trick list in DOM
-     */
-    private _listenScrollEvent(): void {
-        window.addEventListener('scroll', async () => {
-            await this._loopOverDOMElements();
-        });
+        setInterval(() => this._loopOverDOMElements(), 1000);
     }
 
     /**
@@ -42,6 +26,8 @@ export class GithubReviewScripts {
         const elementsBitbucket = document.querySelectorAll(`.type-add .code-diff:not(.${trickAddedClass})`);
         // FOR GITLAB
         const elementsGitlab = document.querySelectorAll(`.line_content.new .line:not(.${trickAddedClass})`);
+        // FOR AZURE DEVOPS
+        const elementsAzureDevops = document.querySelectorAll(`.repos-line-content.added:not(.${trickAddedClass})`);
 
         const elements = [];
         elementsGithub.forEach((element) => {
@@ -51,6 +37,9 @@ export class GithubReviewScripts {
             elements.push(element);
         });
         elementsGitlab.forEach((element) => {
+            elements.push(element);
+        });
+        elementsAzureDevops.forEach((element) => {
             elements.push(element);
         });
         for await (const element of elements) {
