@@ -93,13 +93,6 @@ Run watch mode.
 
 type `Ctrl + Shift + B`
 
-
-## Contributors
-
-![Needone](https://static.wixstatic.com/media/4546b3_1dab3f320024483091b29f9b99da0e4e~mv2.png/v1/fill/w_166,h_60,al_c,q_80,usm_0.66_1.00_0.01/LogoNeedoneFull.webp)
-
-Copyright © [Needone](https://www.needone.fr/)
-
 ## License 
 
 Copyright (c) 2012-2021 apini
