@@ -30,6 +30,11 @@ export class GithubReviewScripts {
         const elementsAzureDevops = document.querySelectorAll(`.repos-line-content.added:not(.${trickAddedClass})`);
 
         const elements = [];
+        // eslint-disable-next-line no-constant-condition
+        if (true) {
+            // eslint-disable-next-line no-console
+            console.log('lol');
+        }
         elementsGithub.forEach((element) => {
             elements.push(element);
         });
